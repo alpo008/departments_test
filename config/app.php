@@ -125,6 +125,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default User settings (for testing purposes)
+    |--------------------------------------------------------------------------
+    |
+    | These settings should be set in .env file to avoid showing real
+    | authorization data in git. Otherwise the application will be unsafe.
+    |
+    */
+
+    'default_user' => [
+        'password' => env('DEFAULT_USER_PASSWORD', ''),
+        'email' => env('DEFAULT_USER_EMAIL', ''),
+        'name' => env('DEFAULT_USER_NAME', ''),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
