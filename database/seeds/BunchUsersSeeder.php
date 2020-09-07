@@ -2,6 +2,11 @@
 
 use Illuminate\Database\Seeder;
 
+/**
+ * Seeds 15 users
+ *
+ * Class BunchUsersSeeder
+ */
 class BunchUsersSeeder extends Seeder
 {
     /**

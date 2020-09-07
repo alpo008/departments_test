@@ -3,6 +3,11 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Seeds default user for testing purposes
+ *
+ * Class DefaultUserSeeder
+ */
 class DefaultUserSeeder extends Seeder
 {
     /**
