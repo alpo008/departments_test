@@ -17,12 +17,32 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
+     * Shows the application dashboard.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
         return view('home');
+    }
+
+    /**
+     * Shows the departments index page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function departments()
+    {
+        return view('home', ['vueComponent' => 'departments']);
+    }
+
+    /**
+     * Shows the users index page.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function users()
+    {
+        return view('home', ['vueComponent' => 'users']);
     }
 }
