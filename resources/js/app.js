@@ -8,6 +8,8 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+const axios = require('axios').default;
+
 Vue.component('departments-component', require('./components/DepartmentsComponent').default);
 Vue.component('users-component', require('./components/UsersComponent').default);
 

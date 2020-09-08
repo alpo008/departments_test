@@ -4,6 +4,7 @@
  * @var $this Illuminate\View\Engines\CompilerEngine
  * @var $vueComponent string
  */
+
 $title = !empty($vueComponent) ? __(ucfirst($vueComponent)) : config('app.name', 'Laravel');
 $vueComponents = ['departments', 'users'];
 
