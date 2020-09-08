@@ -1,11 +1,11 @@
 <template>
     <div class="card">
         <div class="card-header">
-            Departments
+            <div class="page-title">Departments</div>
             <button type="button" class="btn btn-primary">Add</button>
         </div>
         <div class="card-body">
-            <table class="table" v-if="departments.length">
+            <table class="table-responsive" v-if="departments.length">
                 <tbody>
                     <tr v-for="department in departments">
                         <td>
@@ -106,18 +106,26 @@ export default {
 .card-header > button {
     float: right;
 }
-.table td {
+.page-title {
+    display: block;
+    float: left;
+    font-size: 1.5rem;
+}
+.card-body {
     padding: 0.5rem;
+}
+table td {
+    padding: 0.75rem;
     vertical-align: center!important;
 }
-.table td:nth-child(1) {
+table td:nth-child(1) {
     width: 80px;
     text-align: center;
 }
-.table td:nth-child(3) {
+table td:nth-child(3) {
     width: 20%;
 }
-.table p {
+table td p {
     font-weight: bolder;
     margin-bottom: 0!important;
 }
@@ -125,5 +133,8 @@ export default {
     color: #4e555b;
     display: flex;
     flex-direction: row;
+}
+.pagination {
+    margin-bottom: auto!important;
 }
 </style>
