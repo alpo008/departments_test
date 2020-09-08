@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 
 /**
- * Seeds 15 departments
+ * Seeds 15 departments for testing purposes
  *
  * Class BunchDepartmentsSeeder
  */

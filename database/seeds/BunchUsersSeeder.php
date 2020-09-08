@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 class BunchUsersSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seeds 15 users for testing purposes.
      *
      * @return void
      */

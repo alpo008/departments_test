@@ -1,5 +1,5 @@
 # PhpStorm folder
-.idea
+/.idea
 /node_modules
 /public/hot
 /public/storage
