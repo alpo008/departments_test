@@ -12,6 +12,17 @@ use Illuminate\Notifications\Notifiable;
  * @property array $fillable
  * @property array $hidden
  * @property array $casts
+ *
+ * @property integer $id
+ * @property string $name
+ * @property string $email
+ * @property string $email_verified_at
+ * @property string $password
+ * @property string $remember_token
+ * @property string $created_at
+ * @property string $updated_at
+ *
+ * @property Department[] $departments
  */
 class User extends Authenticatable
 {
@@ -43,4 +54,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relation vit table 'departments' via junction table 'department_user'
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function departments()
+    {
+        return $this->belongsToMany('App\Department');
+    }
 }
