@@ -31,7 +31,10 @@
                             </ol>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-secondary">Update</button>
+                            <router-link :to="{name: 'editDepartment', params: {id: department.id}}">
+                                <a class="btn btn-secondary">Update</a>
+                            </router-link>
+<!--                            <button type="button" class="btn btn-secondary">Update</button>-->
                         </td>
                         <td>
                             <button type="button" class="btn btn-danger">Delete</button>

@@ -22,6 +22,11 @@ export default new VueRouter({
             name: 'addDepartment',
             component: DepartmentsForm,
         },
+        {
+            path: '/edit-department/:id',
+            name: 'editDepartment',
+            component: DepartmentsForm,
+        },
     ],
     mode: "history"
 });

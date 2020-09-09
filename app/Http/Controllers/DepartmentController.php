@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -19,7 +20,7 @@ class DepartmentController extends Controller
     const DEFAULT_ENTRIES_PER_PAGE = 4;
 
     /**
-     * Display a listing of the resource.
+     * Returns a listing of the resource.
      *
      * @param Request $request
      * @return \Illuminate\Http\Response
@@ -57,18 +58,25 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //TODO
     }
 
     /**
-     * Display the specified resource.
+     * Returns the specified resource.
      *
-     * @param  \App\Department  $department
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Department $department)
+    public function show(string $id) :Response
     {
-        //
+        if (!$department = Department::with('users')->find($id)) {
+            $department = [];
+        }
+        if (!$allUsers = User::all()) {
+            $allUsers = [];
+        }
+        return response(compact('department', 'allUsers'))
+            ->header('Content-Type', 'application/json');
     }
 
     /**
@@ -86,12 +94,12 @@ class DepartmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Department  $department
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Department $department)
+    public function update(Request $request, string $id)
     {
-        //
+        //TODO
     }
 
     /**
