@@ -45,4 +45,14 @@ class HomeController extends Controller
     {
         return view('home', ['vueComponent' => 'users']);
     }
+
+    /**
+     * Protects of redirecting to 404 in case of vue-page reload.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function addDepartment()
+    {
+        return view('home', ['vueComponent' => 'add-department']);
+    }
 }

@@ -6,7 +6,7 @@
  */
 
 $title = !empty($vueComponent) ? __(ucfirst($vueComponent)) : config('app.name', 'Laravel');
-$vueComponents = ['departments', 'users'];
+$vueComponents = ['departments', 'users', 'add-department'];
 
 @endphp
 

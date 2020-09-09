@@ -24,6 +24,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/departments', 'HomeController@departments')->name('departments');
 Route::get('/users', 'HomeController@users')->name('users');
+Route::get('/add-department', 'HomeController@addDepartment');
 Route::resource('department', 'DepartmentController')->except([
     'create', 'edit'
 ]);

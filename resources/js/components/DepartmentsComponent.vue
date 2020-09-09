@@ -2,7 +2,9 @@
     <div class="card">
         <div class="card-header">
             <div class="page-title">Departments</div>
-            <router-link :to="{name: 'addDepartment'}">Add</router-link>
+            <router-link :to="{name: 'addDepartment'}">
+                <a class="btn btn-primary">Add</a>
+            </router-link>
         </div>
         <div class="card-body">
             <table class="table-responsive" v-if="departments.length">
@@ -111,6 +113,9 @@ export default {
     display: block;
     float: left;
     font-size: 1.5rem;
+}
+.card-header a.btn {
+    float: right;
 }
 .card-body {
     padding: 0.5rem;

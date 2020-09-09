@@ -1991,6 +1991,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Departments',
   data: function data() {
@@ -2084,8 +2086,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Users mounted.');
+  mounted: function mounted() {//
   }
 });
 
@@ -6523,7 +6524,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.card-header > button[data-v-5bc69587] {\n    float: right;\n}\n.page-title[data-v-5bc69587] {\n    display: block;\n    float: left;\n    font-size: 1.5rem;\n}\n.card-body[data-v-5bc69587] {\n    padding: 0.5rem;\n}\ntable td[data-v-5bc69587] {\n    padding: 0.75rem;\n    vertical-align: center!important;\n}\ntable td[data-v-5bc69587]:nth-child(1) {\n    width: 80px;\n    text-align: center;\n}\ntable td[data-v-5bc69587]:nth-child(3) {\n    width: 20%;\n}\ntable td p[data-v-5bc69587] {\n    font-weight: bolder;\n    margin-bottom: 0!important;\n}\n.description[data-v-5bc69587] {\n    color: #4e555b;\n    display: flex;\n    flex-direction: row;\n}\n.pagination[data-v-5bc69587] {\n    margin-bottom: auto!important;\n}\n", ""]);
+exports.push([module.i, "\n.card-header > button[data-v-5bc69587] {\n    float: right;\n}\n.page-title[data-v-5bc69587] {\n    display: block;\n    float: left;\n    font-size: 1.5rem;\n}\n.card-header a.btn[data-v-5bc69587] {\n    float: right;\n}\n.card-body[data-v-5bc69587] {\n    padding: 0.5rem;\n}\ntable td[data-v-5bc69587] {\n    padding: 0.75rem;\n    vertical-align: center!important;\n}\ntable td[data-v-5bc69587]:nth-child(1) {\n    width: 80px;\n    text-align: center;\n}\ntable td[data-v-5bc69587]:nth-child(3) {\n    width: 20%;\n}\ntable td p[data-v-5bc69587] {\n    font-weight: bolder;\n    margin-bottom: 0!important;\n}\n.description[data-v-5bc69587] {\n    color: #4e555b;\n    display: flex;\n    flex-direction: row;\n}\n.pagination[data-v-5bc69587] {\n    margin-bottom: auto!important;\n}\n", ""]);
 
 // exports
 
@@ -38350,7 +38351,7 @@ var render = function() {
         _c("div", { staticClass: "page-title" }, [_vm._v("Departments")]),
         _vm._v(" "),
         _c("router-link", { attrs: { to: { name: "addDepartment" } } }, [
-          _vm._v("Add")
+          _c("a", { staticClass: "btn btn-primary" }, [_vm._v("Add")])
         ])
       ],
       1
