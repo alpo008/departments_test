@@ -33,7 +33,7 @@ $vueComponents = ['departments', 'users'];
         @else
             <div class="col-md-10">
                 <div id="app">
-                    <{{ $vueComponent }}-component></{{ $vueComponent }}-component>
+                    <app-component></app-component>
                 </div>
             </div>
         @endif

@@ -12,7 +12,7 @@
 <script>
 export default {
     mounted() {
-        console.log('Users mounted.')
+        //
     }
 }
 </script>

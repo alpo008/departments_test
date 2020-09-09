@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header">
             <div class="page-title">Departments</div>
-            <button type="button" class="btn btn-primary">Add</button>
+            <router-link :to="{name: 'addDepartment'}">Add</router-link>
         </div>
         <div class="card-body">
             <table class="table-responsive" v-if="departments.length">
@@ -80,11 +80,9 @@ export default {
             })
             .then(result => {
                 if (result.status === 200 && typeof result.data !== 'undefined') {
-                    console.log(result.data)
                     this.departments = typeof result.data.departments === 'object' ? result.data.departments : []
                     this.page = typeof result.data.page !== 'undefined' ? parseInt(result.data.page) : 1
                     this.totalPages = typeof result.data.totalPages !== 'undefined' ? result.data.totalPages : 1
-                    console.log(this.totalPages)
                 }
             })
             .catch(error => console.error(error));
@@ -96,6 +94,9 @@ export default {
     },
     beforeMount() {
         this.getDepartments(1);
+    },
+    mounted() {
+
     }
 }
 
