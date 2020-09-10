@@ -1,13 +1,20 @@
 <template>
     <div class="card">
         <div class="card-header">{{ headingText }}</div>
-
         <div class="card-body">
             <form enctype="multipart/form-data" @submit.prevent.stop="save">
                 <div class="form-group row">
                     <label for="inputName" class="col-sm-2 col-form-label">Name</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="inputName" v-model="department.name">
+                        <input type="text"
+                               class="form-control"
+                               :class="getError('name') ? 'is-invalid' : ''"
+                               id="inputName"
+                               v-model="department.name"
+                        >
+                        <span role="alert" class="invalid-feedback" v-if="getError('name')">
+                            <strong>{{ getError('name') }}</strong>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -16,16 +23,21 @@
                         <textarea
                             name="description"
                             id="inputDescription"
+                            :class="getError('description') ? 'is-invalid' : ''"
                             rows="3"
                             v-model="department.description"
                         >
                         </textarea>
+                        <span role="alert" class="invalid-feedback" v-if="getError('description')">
+                            <strong>{{ getError('description') }}</strong>
+                        </span>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="custom-file">
                         <input type="file"
                                class="custom-file-input"
+                               :class="getError('logo') ? 'is-invalid' : ''"
                                id="inputLogo"
                                @change="handleLogo"
                                accept="image/png, image/jpeg, image/gif"
@@ -33,44 +45,30 @@
                         <label class="custom-file-label" for="inputLogo" aria-describedby="inputGroupFileAddon02">
                             Choose file
                         </label>
+                        <span role="alert" class="invalid-feedback" v-if="getError('logo')">
+                            <strong>{{ getError('logo') }}</strong>
+                        </span>
                     </div>
                 </div>
                 <fieldset class="form-group">
                     <div class="row">
-                        <legend class="col-form-label col-sm-2 pt-0">Radios</legend>
+                        <legend class="col-form-label col-sm-2 pt-0">Users</legend>
                         <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                                <label class="form-check-label" for="gridRadios1">
-                                    First radio
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                                <label class="form-check-label" for="gridRadios2">
-                                    Second radio
-                                </label>
-                            </div>
-                            <div class="form-check disabled">
-                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3" disabled>
-                                <label class="form-check-label" for="gridRadios3">
-                                    Third disabled radio
+                            <div class="form-check" v-for="user in allUsers">
+                                <input class="form-check-input"
+                                       type="checkbox" name="users"
+                                       :id="'users_' + user.id"
+                                       value="1"
+                                       :checked="selectedUsers.indexOf(user.id) !== -1"
+                                        @change="toggleUser(user.id)"
+                                >
+                                <label class="form-check-label" :for="'users_' + user.id">
+                                    {{ user.name }} ( <a :href="'mailto:' + user.email">{{ user.email }}</a> )
                                 </label>
                             </div>
                         </div>
                     </div>
                 </fieldset>
-                <div class="form-group row">
-                    <div class="col-sm-2">Checkbox</div>
-                    <div class="col-sm-10">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gridCheck1">
-                            <label class="form-check-label" for="gridCheck1">
-                                Example checkbox
-                            </label>
-                        </div>
-                    </div>
-                </div>
                 <div class="form-group row">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-primary">
@@ -91,10 +89,10 @@ export default {
             indexUrl: '/department',
             department: {},
             allUsers: [],
+            selectedUsers: [],
             id: 0,
-            name: '',
-            description: '',
-            logo: ''
+            logo: '',
+            errors: {}
         };
     },
     methods: {
@@ -102,8 +100,15 @@ export default {
             axios.get(this.indexUrl + '/' + this.id )
                 .then(result => {
                     if (result.status === 200 && typeof result.data !== 'undefined') {
-                        this.department = typeof result.data.department === 'object' ? result.data.department : {}
-                        this.allUsers = typeof result.data.allUsers !== 'undefined' ? parseInt(result.data.allUsers) : []
+                        this.department = typeof result.data.department === 'object' &&
+                            !jQuery.isEmptyObject(result.data.department) ?
+                            result.data.department : {}
+                        this.allUsers = typeof result.data.allUsers !== 'undefined' ? result.data.allUsers : []
+                        if (typeof this.department.users === 'object' && this.department.users.length) {
+                            this.department.users.forEach(user => {
+                                this.selectedUsers.push(user.id)
+                            })
+                        }
                     }
                 })
                 .catch(errors => this.handleErrors(errors));
@@ -117,9 +122,10 @@ export default {
             let formData = new FormData();
             formData.append('logo', this.logo);
             formData.append('department', JSON.stringify(this.department));
+            formData.append('users', JSON.stringify(this.selectedUsers));
             if (!this.id) {
             axios.post(this.indexUrl, formData)
-                .then(response => this.handleResponse(response))
+                .then(response => this.handleResponse(response.data))
                 .catch(errors => this.handleErrors(errors));
             } else {
                 axios.patch(this.indexUrl + '/' + this.id, formData)
@@ -128,10 +134,33 @@ export default {
             }
         },
         handleResponse(response) {
-            //TODO
+            if (response.code === 200) {
+                this.errors = {}
+                this.$router.push('/departments')
+            } else {
+                this.errors = response.data;
+            }
         },
         handleErrors(errors) {
-            //TODO
+            alert(errors.toString())
+        },
+        getError(name) {
+            let errors = this.errors[name]
+            if (typeof errors === 'string') {
+                return errors
+            }
+            if (typeof errors === 'object' && typeof errors[0] === 'string') {
+                return errors[0]
+            }
+            return false;
+        },
+        toggleUser(id) {
+            let index = this.selectedUsers.indexOf(id);
+            if (index === -1) {
+                this.selectedUsers.push(id)
+            } else {
+                this.selectedUsers.splice(index, 1)
+            }
         }
     },
     computed: {
@@ -146,8 +175,8 @@ export default {
         let id = parseInt(this.$route.params.id);
         if (!isNaN(id)) {
             this.id = id;
-            this.getDepartment()
         }
+        this.getDepartment()
     }
 }
 </script>

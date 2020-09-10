@@ -141,6 +141,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default settings for departments (sections) pages
+    |--------------------------------------------------------------------------
+    |
+    | If these parameters are not set please take care about default
+    | constants in models and controllers.
+    |
+    */
+
+    'department' => [
+        'entriesPerPage' => 4,
+        'logoSrcPath' => '/storage/logo/',
+        'logoSavePath' => 'public/logo'
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |

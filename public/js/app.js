@@ -2025,14 +2025,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     },
     imagePath: function imagePath(path) {
-      var defaultImagePath = '/img/logo/no-image.png';
+      var defaultImagePath = '/storage/logo/no-image.png';
       return !!path ? path : defaultImagePath;
     }
   },
   beforeMount: function beforeMount() {
     this.getDepartments(1);
-  },
-  mounted: function mounted() {}
+  }
 });
 
 /***/ }),
@@ -2131,8 +2130,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "DepartmentsFormComponent",
   data: function data() {
@@ -2140,10 +2137,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       indexUrl: '/department',
       department: {},
       allUsers: [],
+      selectedUsers: [],
       id: 0,
-      name: '',
-      description: '',
-      logo: ''
+      logo: '',
+      errors: {}
     };
   },
   methods: {
@@ -2152,11 +2149,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
       axios.get(this.indexUrl + '/' + this.id).then(function (result) {
         if (result.status === 200 && typeof result.data !== 'undefined') {
-          _this.department = _typeof(result.data.department) === 'object' ? result.data.department : {};
-          _this.allUsers = typeof result.data.allUsers !== 'undefined' ? parseInt(result.data.allUsers) : [];
+          _this.department = _typeof(result.data.department) === 'object' && !jQuery.isEmptyObject(result.data.department) ? result.data.department : {};
+          _this.allUsers = typeof result.data.allUsers !== 'undefined' ? result.data.allUsers : [];
+
+          if (_typeof(_this.department.users) === 'object' && _this.department.users.length) {
+            _this.department.users.forEach(function (user) {
+              _this.selectedUsers.push(user.id);
+            });
+          }
         }
-      })["catch"](function (error) {
-        return console.error(error);
+      })["catch"](function (errors) {
+        return _this.handleErrors(errors);
       });
     },
     handleLogo: function handleLogo(e) {
@@ -2170,10 +2173,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var formData = new FormData();
       formData.append('logo', this.logo);
       formData.append('department', JSON.stringify(this.department));
+      formData.append('users', JSON.stringify(this.selectedUsers));
 
       if (!this.id) {
         axios.post(this.indexUrl, formData).then(function (response) {
-          return _this2.handleResponse(response);
+          return _this2.handleResponse(response.data);
         })["catch"](function (errors) {
           return _this2.handleErrors(errors);
         });
@@ -2185,9 +2189,38 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         });
       }
     },
-    handleResponse: function handleResponse(response) {//TODO
+    handleResponse: function handleResponse(response) {
+      if (response.code === 200) {
+        this.errors = {};
+        this.$router.push('/departments');
+      } else {
+        this.errors = response.data;
+      }
     },
-    handleErrors: function handleErrors(errors) {//TODO
+    handleErrors: function handleErrors(errors) {
+      alert(errors.toString());
+    },
+    getError: function getError(name) {
+      var errors = this.errors[name];
+
+      if (typeof errors === 'string') {
+        return errors;
+      }
+
+      if (_typeof(errors) === 'object' && typeof errors[0] === 'string') {
+        return errors[0];
+      }
+
+      return false;
+    },
+    toggleUser: function toggleUser(id) {
+      var index = this.selectedUsers.indexOf(id);
+
+      if (index === -1) {
+        this.selectedUsers.push(id);
+      } else {
+        this.selectedUsers.splice(index, 1);
+      }
     }
   },
   computed: {
@@ -2204,8 +2237,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     if (!isNaN(id)) {
       this.id = id;
-      this.getDepartment();
     }
+
+    this.getDepartment();
   }
 });
 
@@ -6670,7 +6704,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.card-header > button[data-v-5bc69587] {\n    float: right;\n}\n.page-title[data-v-5bc69587] {\n    display: block;\n    float: left;\n    font-size: 1.5rem;\n}\n.card-header a.btn[data-v-5bc69587] {\n    float: right;\n}\n.card-body[data-v-5bc69587] {\n    padding: 0.5rem;\n}\ntable td[data-v-5bc69587] {\n    padding: 0.75rem;\n    vertical-align: center!important;\n}\ntable td[data-v-5bc69587]:nth-child(1) {\n    width: 80px;\n    text-align: center;\n}\ntable td[data-v-5bc69587]:nth-child(3) {\n    width: 20%;\n}\ntable td p[data-v-5bc69587] {\n    font-weight: bolder;\n    margin-bottom: 0!important;\n}\n.description[data-v-5bc69587] {\n    color: #4e555b;\n    display: flex;\n    flex-direction: row;\n}\n.pagination[data-v-5bc69587] {\n    margin-bottom: auto!important;\n}\n", ""]);
+exports.push([module.i, "\n.card-header > button[data-v-5bc69587] {\n    float: right;\n}\n.page-title[data-v-5bc69587] {\n    display: block;\n    float: left;\n    font-size: 1.5rem;\n}\n.card-header a.btn[data-v-5bc69587] {\n    float: right;\n}\n.card-body[data-v-5bc69587] {\n    padding: 0.5rem;\n}\ntable td[data-v-5bc69587] {\n    padding: 0.75rem;\n    vertical-align: center!important;\n}\ntable td[data-v-5bc69587]:nth-child(1) {\n    width: 80px;\n    text-align: center;\n}\ntable td[data-v-5bc69587]:nth-child(3) {\n    width: 35%;\n}\ntable td p[data-v-5bc69587] {\n    font-weight: bolder;\n    margin-bottom: 0!important;\n}\n.description[data-v-5bc69587] {\n    color: #4e555b;\n    display: flex;\n    flex-direction: row;\n}\n.pagination[data-v-5bc69587] {\n    margin-bottom: auto!important;\n}\n", ""]);
 
 // exports
 
@@ -38758,6 +38792,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
+                class: _vm.getError("name") ? "is-invalid" : "",
                 attrs: { type: "text", id: "inputName" },
                 domProps: { value: _vm.department.name },
                 on: {
@@ -38768,7 +38803,18 @@ var render = function() {
                     _vm.$set(_vm.department, "name", $event.target.value)
                   }
                 }
-              })
+              }),
+              _vm._v(" "),
+              _vm.getError("name")
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "invalid-feedback",
+                      attrs: { role: "alert" }
+                    },
+                    [_c("strong", [_vm._v(_vm._s(_vm.getError("name")))])]
+                  )
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -38792,6 +38838,7 @@ var render = function() {
                     expression: "department.description"
                   }
                 ],
+                class: _vm.getError("description") ? "is-invalid" : "",
                 attrs: {
                   name: "description",
                   id: "inputDescription",
@@ -38806,7 +38853,22 @@ var render = function() {
                     _vm.$set(_vm.department, "description", $event.target.value)
                   }
                 }
-              })
+              }),
+              _vm._v(" "),
+              _vm.getError("description")
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "invalid-feedback",
+                      attrs: { role: "alert" }
+                    },
+                    [
+                      _c("strong", [
+                        _vm._v(_vm._s(_vm.getError("description")))
+                      ])
+                    ]
+                  )
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -38814,6 +38876,7 @@ var render = function() {
             _c("div", { staticClass: "custom-file" }, [
               _c("input", {
                 staticClass: "custom-file-input",
+                class: _vm.getError("logo") ? "is-invalid" : "",
                 attrs: {
                   type: "file",
                   id: "inputLogo",
@@ -38836,139 +38899,82 @@ var render = function() {
                     "\n                        Choose file\n                    "
                   )
                 ]
+              ),
+              _vm._v(" "),
+              _vm.getError("logo")
+                ? _c(
+                    "span",
+                    {
+                      staticClass: "invalid-feedback",
+                      attrs: { role: "alert" }
+                    },
+                    [_c("strong", [_vm._v(_vm._s(_vm.getError("logo")))])]
+                  )
+                : _vm._e()
+            ])
+          ]),
+          _vm._v(" "),
+          _c("fieldset", { staticClass: "form-group" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("legend", { staticClass: "col-form-label col-sm-2 pt-0" }, [
+                _vm._v("Users")
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "col-sm-10" },
+                _vm._l(_vm.allUsers, function(user) {
+                  return _c("div", { staticClass: "form-check" }, [
+                    _c("input", {
+                      staticClass: "form-check-input",
+                      attrs: {
+                        type: "checkbox",
+                        name: "users",
+                        id: "users_" + user.id,
+                        value: "1"
+                      },
+                      domProps: {
+                        checked: _vm.selectedUsers.indexOf(user.id) !== -1
+                      },
+                      on: {
+                        change: function($event) {
+                          return _vm.toggleUser(user.id)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "form-check-label",
+                        attrs: { for: "users_" + user.id }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(user.name) +
+                            " ( "
+                        ),
+                        _c("a", { attrs: { href: "mailto:" + user.email } }, [
+                          _vm._v(_vm._s(user.email))
+                        ]),
+                        _vm._v(" )\n                            ")
+                      ]
+                    )
+                  ])
+                }),
+                0
               )
             ])
           ]),
           _vm._v(" "),
-          _vm._m(0),
-          _vm._v(" "),
-          _vm._m(1),
-          _vm._v(" "),
-          _vm._m(2)
+          _vm._m(0)
         ]
       )
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("fieldset", { staticClass: "form-group" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("legend", { staticClass: "col-form-label col-sm-2 pt-0" }, [
-          _vm._v("Radios")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-sm-10" }, [
-          _c("div", { staticClass: "form-check" }, [
-            _c("input", {
-              staticClass: "form-check-input",
-              attrs: {
-                type: "radio",
-                name: "gridRadios",
-                id: "gridRadios1",
-                value: "option1",
-                checked: ""
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "label",
-              {
-                staticClass: "form-check-label",
-                attrs: { for: "gridRadios1" }
-              },
-              [
-                _vm._v(
-                  "\n                                First radio\n                            "
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-check" }, [
-            _c("input", {
-              staticClass: "form-check-input",
-              attrs: {
-                type: "radio",
-                name: "gridRadios",
-                id: "gridRadios2",
-                value: "option2"
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "label",
-              {
-                staticClass: "form-check-label",
-                attrs: { for: "gridRadios2" }
-              },
-              [
-                _vm._v(
-                  "\n                                Second radio\n                            "
-                )
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-check disabled" }, [
-            _c("input", {
-              staticClass: "form-check-input",
-              attrs: {
-                type: "radio",
-                name: "gridRadios",
-                id: "gridRadios3",
-                value: "option3",
-                disabled: ""
-              }
-            }),
-            _vm._v(" "),
-            _c(
-              "label",
-              {
-                staticClass: "form-check-label",
-                attrs: { for: "gridRadios3" }
-              },
-              [
-                _vm._v(
-                  "\n                                Third disabled radio\n                            "
-                )
-              ]
-            )
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row" }, [
-      _c("div", { staticClass: "col-sm-2" }, [_vm._v("Checkbox")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-10" }, [
-        _c("div", { staticClass: "form-check" }, [
-          _c("input", {
-            staticClass: "form-check-input",
-            attrs: { type: "checkbox", id: "gridCheck1" }
-          }),
-          _vm._v(" "),
-          _c(
-            "label",
-            { staticClass: "form-check-label", attrs: { for: "gridCheck1" } },
-            [
-              _vm._v(
-                "\n                            Example checkbox\n                        "
-              )
-            ]
-          )
-        ])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

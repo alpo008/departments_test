@@ -39,4 +39,35 @@ class Department extends Model
     {
         return $this->belongsToMany('App\User');
     }
+
+    /**
+     * Validation rules for Department instances
+     *
+     * @return array
+     */
+    public static function rules() :array
+    {
+        return [
+            'name' => 'unique:departments|required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s\d_-]+$/',
+            'description' => 'required|between:5,65535',
+            'logo' => 'file|mimes:jpeg,gif,png|max:1024'
+        ];
+    }
+
+    /**
+     * Validation errors messages
+     *
+     * @return array
+     */
+    public static function messages()
+    {
+        return [
+            'required' => __('This field is required'),
+            'between' => __('Number of characters should be between :min and :max'),
+            'max' => __('Max allowed size is :max KB'),
+            'regex' => __('Unacceptable symbols'),
+            'file' => __('File upload failed'),
+            'mimes' => __('Wrong mime-type of the uploaded file')
+        ];
+    }
 }

@@ -93,15 +93,12 @@ export default {
             .catch(error => console.error(error));
         },
         imagePath(path) {
-            let defaultImagePath = '/img/logo/no-image.png';
+            let defaultImagePath = '/storage/logo/no-image.png';
             return !!path ? path : defaultImagePath
         }
     },
     beforeMount() {
         this.getDepartments(1);
-    },
-    mounted() {
-
     }
 }
 
@@ -132,7 +129,7 @@ table td:nth-child(1) {
     text-align: center;
 }
 table td:nth-child(3) {
-    width: 20%;
+    width: 35%;
 }
 table td p {
     font-weight: bolder;
