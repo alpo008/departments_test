@@ -37,7 +37,13 @@
 <!--                            <button type="button" class="btn btn-secondary">Update</button>-->
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger">Delete</button>
+                            <button
+                                type="button"
+                                class="btn btn-danger"
+                                @click.prevent="deleteDepartment(department.id)"
+                            >
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -95,6 +101,17 @@ export default {
         imagePath(path) {
             let defaultImagePath = '/storage/logo/no-image.png';
             return !!path ? path : defaultImagePath
+        },
+        deleteDepartment(id) {
+            if (confirm('Sure?')) {
+                axios.delete(this.indexUrl + '/' + id)
+                .then(result => {
+                    if(result.data.code === 200) {
+                        this.getDepartments(this.page)
+                    }
+                })
+                .catch(error => console.error(error))
+            }
         }
     },
     beforeMount() {

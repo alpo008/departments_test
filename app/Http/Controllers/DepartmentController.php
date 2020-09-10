@@ -216,12 +216,41 @@ class DepartmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Department  $department
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Department $department)
+    public function destroy(string $id)
     {
-        //
+        $model = Department::find($id);
+        if ($model instanceof Department) {
+            $code = 200;
+            if (!empty($model->logo)) {
+                $parts = explode('/', $model->logo);
+                $logoFile = array_pop($parts);
+            }
+            DB::beginTransaction();
+            $model->users()->detach();
+            try {
+                $commit = $model->delete();
+            } catch (\Exception $e) {
+                $commit = false;
+            }
+            if (!$commit) {
+                DB::rollBack();
+                $code = 400;
+            } else {
+                DB::commit();
+                if (!empty($logoFile)) {
+                    $this->deleteFile($logoFile);
+                }
+            }
+            return response(compact('code'))
+                ->header('Content-Type', 'application/json');
+        } else {
+            return response(compact(404, []))
+                ->header('Content-Type', 'application/json')
+                ->setStatusCode(404);
+        }
     }
 
     /**
@@ -231,13 +260,14 @@ class DepartmentController extends Controller
      * @param string $fileName
      * @return bool
      */
-    protected function saveFile(UploadedFile $file, string $fileName) {
+    protected function saveFile(UploadedFile $file, string $fileName) :bool
+    {
         $logoSavePath = config('app.department.logoSavePath', self::DEFAULT_LOGO_SAVE_PATH);
         return $file->storeAs($logoSavePath, $fileName);
     }
 
     /**
-     * Saving uploaded file
+     * Deleting uploaded file
      *
      * @param string $fileName
      * @return bool
@@ -261,7 +291,7 @@ class DepartmentController extends Controller
      * @param Request $request
      * @return array
      */
-    protected function getPost(Request $request)
+    protected function getPost(Request $request) :array
     {
         $postFields = [];
         $fileName = '';

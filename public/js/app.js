@@ -1996,6 +1996,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Departments',
   data: function data() {
@@ -2027,6 +2033,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     imagePath: function imagePath(path) {
       var defaultImagePath = '/storage/logo/no-image.png';
       return !!path ? path : defaultImagePath;
+    },
+    deleteDepartment: function deleteDepartment(id) {
+      var _this2 = this;
+
+      if (confirm('Sure?')) {
+        axios["delete"](this.indexUrl + '/' + id).then(function (result) {
+          if (result.data.code === 200) {
+            _this2.getDepartments(_this2.page);
+          }
+        })["catch"](function (error) {
+          return console.error(error);
+        });
+      }
     }
   },
   beforeMount: function beforeMount() {
@@ -38657,7 +38676,26 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _vm._m(0, true)
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.deleteDepartment(department.id)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                Delete\n                            "
+                        )
+                      ]
+                    )
+                  ])
                 ])
               }),
               0
@@ -38717,20 +38755,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c(
-        "button",
-        { staticClass: "btn btn-danger", attrs: { type: "button" } },
-        [_vm._v("Delete")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
