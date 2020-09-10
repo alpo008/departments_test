@@ -120,18 +120,19 @@ export default {
         },
         save() {
             let formData = new FormData();
+            let url;
             formData.append('logo', this.logo);
             formData.append('department', JSON.stringify(this.department));
             formData.append('users', JSON.stringify(this.selectedUsers));
-            if (!this.id) {
-            axios.post(this.indexUrl, formData)
+            if (this.id) {
+                formData.append('_method', 'PATCH')
+                url = this.indexUrl + '/' + this.id
+            } else {
+                url = this.indexUrl
+            }
+            axios.post(url, formData)
                 .then(response => this.handleResponse(response.data))
                 .catch(errors => this.handleErrors(errors));
-            } else {
-                axios.patch(this.indexUrl + '/' + this.id, formData)
-                .then(response => this.handleResponse(response))
-                .catch(errors => this.handleErrors(errors));
-            }
         },
         handleResponse(response) {
             if (response.code === 200) {

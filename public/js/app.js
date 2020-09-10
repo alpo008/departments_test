@@ -2171,23 +2171,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var _this2 = this;
 
       var formData = new FormData();
+      var url;
       formData.append('logo', this.logo);
       formData.append('department', JSON.stringify(this.department));
       formData.append('users', JSON.stringify(this.selectedUsers));
 
-      if (!this.id) {
-        axios.post(this.indexUrl, formData).then(function (response) {
-          return _this2.handleResponse(response.data);
-        })["catch"](function (errors) {
-          return _this2.handleErrors(errors);
-        });
+      if (this.id) {
+        formData.append('_method', 'PATCH');
+        url = this.indexUrl + '/' + this.id;
       } else {
-        axios.patch(this.indexUrl + '/' + this.id, formData).then(function (response) {
-          return _this2.handleResponse(response);
-        })["catch"](function (errors) {
-          return _this2.handleErrors(errors);
-        });
+        url = this.indexUrl;
       }
+
+      axios.post(url, formData).then(function (response) {
+        return _this2.handleResponse(response.data);
+      })["catch"](function (errors) {
+        return _this2.handleErrors(errors);
+      });
     },
     handleResponse: function handleResponse(response) {
       if (response.code === 200) {
@@ -6704,7 +6704,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.card-header > button[data-v-5bc69587] {\n    float: right;\n}\n.page-title[data-v-5bc69587] {\n    display: block;\n    float: left;\n    font-size: 1.5rem;\n}\n.card-header a.btn[data-v-5bc69587] {\n    float: right;\n}\n.card-body[data-v-5bc69587] {\n    padding: 0.5rem;\n}\ntable td[data-v-5bc69587] {\n    padding: 0.75rem;\n    vertical-align: center!important;\n}\ntable td[data-v-5bc69587]:nth-child(1) {\n    width: 80px;\n    text-align: center;\n}\ntable td[data-v-5bc69587]:nth-child(3) {\n    width: 35%;\n}\ntable td p[data-v-5bc69587] {\n    font-weight: bolder;\n    margin-bottom: 0!important;\n}\n.description[data-v-5bc69587] {\n    color: #4e555b;\n    display: flex;\n    flex-direction: row;\n}\n.pagination[data-v-5bc69587] {\n    margin-bottom: auto!important;\n}\n", ""]);
+exports.push([module.i, "\n.card-header > button[data-v-5bc69587] {\n    float: right;\n}\n.page-title[data-v-5bc69587] {\n    display: block;\n    float: left;\n    font-size: 1.5rem;\n}\n.card-header a.btn[data-v-5bc69587] {\n    float: right;\n}\n.card-body[data-v-5bc69587] {\n    padding: 0.5rem;\n}\ntable td[data-v-5bc69587] {\n    padding: 0.75rem;\n    vertical-align: top!important;\n}\ntable td[data-v-5bc69587]:nth-child(1) {\n    width: 80px;\n    text-align: center;\n}\ntable td[data-v-5bc69587]:nth-child(3) {\n    width: 35%;\n}\ntable td p[data-v-5bc69587] {\n    font-weight: bolder;\n    margin-bottom: 0!important;\n}\n.description[data-v-5bc69587] {\n    color: #4e555b;\n    display: flex;\n    flex-direction: row;\n}\n.pagination[data-v-5bc69587] {\n    margin-bottom: auto!important;\n}\n", ""]);
 
 // exports
 
@@ -38588,7 +38588,7 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "card-body" }, [
       _vm.departments.length
-        ? _c("table", { staticClass: "table-responsive" }, [
+        ? _c("table", { staticClass: "table table-responsive" }, [
             _c(
               "tbody",
               _vm._l(_vm.departments, function(department) {

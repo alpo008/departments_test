@@ -43,14 +43,20 @@ class Department extends Model
     /**
      * Validation rules for Department instances
      *
+     * @param Department|null $model
      * @return array
      */
-    public static function rules() :array
+    public static function rules($model = null) :array
     {
+        if ($model instanceof self) {
+            $nameUnique = '|unique:departments,name,' . $model->id;
+        } else {
+            $nameUnique = '|unique:departments';
+        }
         return [
-            'name' => 'unique:departments|required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s\d_-]+$/',
+            'name' => 'required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s\d_-]+$/' . $nameUnique,
             'description' => 'required|between:5,65535',
-            'logo' => 'file|mimes:jpeg,gif,png|max:1024'
+            'logo' => 'nullable|file|mimes:jpeg,gif,png|max:1024'
         ];
     }
 

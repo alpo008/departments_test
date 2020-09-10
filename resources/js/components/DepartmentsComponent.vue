@@ -7,7 +7,7 @@
             </router-link>
         </div>
         <div class="card-body">
-            <table class="table-responsive" v-if="departments.length">
+            <table class="table table-responsive" v-if="departments.length">
                 <tbody>
                     <tr v-for="department in departments">
                         <td>
@@ -122,7 +122,7 @@ export default {
 }
 table td {
     padding: 0.75rem;
-    vertical-align: center!important;
+    vertical-align: top!important;
 }
 table td:nth-child(1) {
     width: 80px;

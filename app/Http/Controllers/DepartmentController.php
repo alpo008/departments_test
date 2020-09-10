@@ -78,18 +78,12 @@ class DepartmentController extends Controller
     {
         $code = 200;
         $data = [];
-        $postFields = [];
+        $post = $this->getPost($request);
+        $postFields = $post['postFields'] ?? [];
+        $users = $post['users'] ?? [];
+        $fileName = $post['fileName'] ?? '';
+        $logo = $postFields['logo'] ?? null;
         $logoSrcPath = config('app.department.logoSrcPath', self::DEFAULT_LOGO_SRC_PATH);
-        if ($department = $request->post('department')) {
-            $postFields = json_decode($department, true);
-        }
-        if ($users = $request->post('users')) {
-            $users = json_decode($users);
-        }
-        if ($logo = $request->file('logo')) {
-            $postFields['logo'] = $logo;
-            $fileName = (string)Str::uuid() . '.' . $logo->getClientOriginalExtension();
-        }
         $validator = Validator::make($postFields, Department::rules(), Department::messages());
         if ($validator->fails()) {
             $code = 400;
@@ -162,7 +156,61 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //TODO
+        $model = Department::find($id);
+        if ($model instanceof Department) {
+            $code = 200;
+            $data = [];
+            $post = $this->getPost($request);
+            $postFields = $post['postFields'] ?? [];
+            $users = $post['users'] ?? [];
+            $fileName = $post['fileName'] ?? '';
+            $logo = $postFields['logo'] ?? null;
+            $oldFile = null;
+            if (!empty($model->logo)) {
+                $parts = explode('/', $model->logo);
+                $oldFile = array_pop($parts);
+            }
+            $logoSrcPath = config('app.department.logoSrcPath', self::DEFAULT_LOGO_SRC_PATH);
+            $validator = Validator::make($postFields, Department::rules($model), Department::messages());
+            if ($validator->fails()) {
+                $code = 400;
+                $data = $validator->errors();
+            } else {
+                $model->name = $postFields['name'];
+                $model->description = $postFields['description'];
+
+                DB::beginTransaction();
+
+                if ($commit = $model->save()) {
+                    if ($logo instanceof UploadedFile && !empty($fileName)) {
+                        if ($this->saveFile($logo, $fileName)) {
+                            $model->logo = $logoSrcPath . $fileName;
+                            $commit = $model->save();
+                        }
+                        if (!empty($oldFile)) {
+                            $this->deleteFile($oldFile);
+                        }
+                    }
+                }
+                try {
+                    $model->users()->sync($users);
+                } catch (\Exception $e) {
+                    $commit = false;
+                }
+                if ($commit) {
+                    DB::commit();
+                    $data = $model->attributesToArray();
+                } else {
+                    DB::rollBack();
+                }
+            }
+        } else {
+            return response(compact(404, []))
+                ->header('Content-Type', 'application/json')
+                ->setStatusCode(404);
+        }
+        return response(compact('code', 'data'))
+            ->header('Content-Type', 'application/json');
     }
 
     /**
@@ -186,5 +234,52 @@ class DepartmentController extends Controller
     protected function saveFile(UploadedFile $file, string $fileName) {
         $logoSavePath = config('app.department.logoSavePath', self::DEFAULT_LOGO_SAVE_PATH);
         return $file->storeAs($logoSavePath, $fileName);
+    }
+
+    /**
+     * Saving uploaded file
+     *
+     * @param string $fileName
+     * @return bool
+     */
+    protected function deleteFile(string $fileName) :bool
+    {
+        $logoSavePath = config('app.department.logoSavePath', self::DEFAULT_LOGO_SAVE_PATH);
+        try {
+            $result = unlink(storage_path(
+                'app' . DIRECTORY_SEPARATOR .$logoSavePath . DIRECTORY_SEPARATOR . $fileName)
+            );
+        } catch (\Exception $e) {
+            $result= false;
+        }
+        return $result;
+    }
+
+    /**
+     * Retrieving data from create / update request
+     *
+     * @param Request $request
+     * @return array
+     */
+    protected function getPost(Request $request)
+    {
+        $postFields = [];
+        $fileName = '';
+        if ($department = $request->post('department')) {
+            $postFields = json_decode($department, true);
+            if (!empty($postFields['logo']) && is_string($postFields['logo'])) {
+                $postFields['logo'] = null;
+            }
+        }
+        if ($users = $request->post('users')) {
+            $users = json_decode($users);
+        } else {
+            $users = [];
+        }
+        if ($logo = $request->file('logo')) {
+            $postFields['logo'] = $logo;
+            $fileName = (string)Str::uuid() . '.' . $logo->getClientOriginalExtension();
+        }
+        return compact('postFields', 'users', 'fileName');
     }
 }
