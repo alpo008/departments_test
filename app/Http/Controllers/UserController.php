@@ -69,7 +69,11 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        if (!$user = User::find($id)) {
+            $user = [];
+        }
+        return response(compact('user'))
+            ->header('Content-Type', 'application/json');
     }
 
     /**
