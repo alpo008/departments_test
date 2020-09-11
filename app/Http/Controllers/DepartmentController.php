@@ -72,7 +72,7 @@ class DepartmentController extends Controller
         $fileName = $post['fileName'] ?? '';
         $logo = $postFields['logo'] ?? null;
         $logoSrcPath = config('app.department.logoSrcPath', self::DEFAULT_LOGO_SRC_PATH);
-        $validator = Validator::make($postFields, Department::rules(), Department::messages());
+        $validator = Validator::make($postFields, Department::rules());
         if ($validator->fails()) {
             $code = 400;
             $data = $validator->errors();
@@ -148,7 +148,7 @@ class DepartmentController extends Controller
                 $oldFile = array_pop($parts);
             }
             $logoSrcPath = config('app.department.logoSrcPath', self::DEFAULT_LOGO_SRC_PATH);
-            $validator = Validator::make($postFields, Department::rules($model), Department::messages());
+            $validator = Validator::make($postFields, Department::rules($model));
             if ($validator->fails()) {
                 $code = 400;
                 $data = $validator->errors();

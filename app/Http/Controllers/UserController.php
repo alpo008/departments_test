@@ -53,7 +53,7 @@ class UserController extends Controller
         $code = 200;
         $data = [];
         $post = $request->post();
-        $validator = Validator::make($post, User::rules(), User::messages());
+        $validator = Validator::make($post, User::rules());
         if ($validator->fails()) {
             $code = 400;
             $data = $validator->errors();
@@ -106,7 +106,7 @@ class UserController extends Controller
             $rules = array_filter(User::rules(), function ($key) use($dirtyAttributes) {
                 return array_key_exists($key, $dirtyAttributes);
             }, ARRAY_FILTER_USE_KEY);
-            $validator = Validator::make($dirtyAttributes, $rules, User::messages());
+            $validator = Validator::make($dirtyAttributes, $rules);
             if ($validator->fails()) {
                 $code = 400;
                 $data = $validator->errors();

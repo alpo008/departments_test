@@ -79,24 +79,7 @@ class User extends Authenticatable
         return [
             'name' => 'required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s]+$/' . $nameUnique,
             'email' => 'required|email' . $emailUnique,
-            'password' => 'required|alpha_dash|min:6'
-        ];
-    }
-
-    /**
-     * Validation errors messages
-     *
-     * @return array
-     */
-    public static function messages()
-    {
-        return [
-            'required' => __('This field is required'),
-            'email' => __('Invalid email'),
-            'between' => __('Number of characters should be between :min and :max'),
-            'min' => __('Minimum :min characters'),
-            'regex' => __('Unacceptable symbols'),
-            'alpha_dash' => __('Allowed latin letters, - and _'),
+            'password' => 'required|alpha_dash|min:8'
         ];
     }
 }

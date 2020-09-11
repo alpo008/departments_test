@@ -34,12 +34,9 @@ class DepartmentTest extends TestCase
     public function testDepartmentClass()
     {
         $rules = Department::rules();
-        $messages = Department::messages();
         $this->assertClassHasAttribute('fillable', Department::class);
         $this->assertTrue(is_array($rules));
         $this->assertCount(3, $rules);
-        $this->assertTrue(is_array($messages));
-        $this->assertCount(6, $messages);
     }
 
     /**

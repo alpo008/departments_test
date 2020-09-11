@@ -1,0 +1,12 @@
+{
+    "Departments" : "Отделы",
+    "E-Mail Address" : "Ваш e-mail",
+    "Forgot Your Password?" : "Забыли пароль?",
+    "Login" : "Авторизация",
+    "Logout" : "Выход",
+    "Password" : "Пароль",
+    "Remember Me" : "Запомнить меня",
+    "Reset Password" : "Восстановление пароля",
+    "Send Password Reset Link" : "Получить ссылку для восстановления пароля",
+    "Users" : "Пользователи"
+}

@@ -33,3 +33,5 @@ Route::resource('user', 'UserController')->except([
 
 Route::get('/add-user', 'HomeController@addUser');
 Route::get('/edit-user/{id}', 'HomeController@editUser');
+Route::get('/add-department', 'HomeController@addDepartment');
+Route::get('/edit-department/{id}', 'HomeController@editDepartment');

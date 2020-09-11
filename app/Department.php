@@ -59,21 +59,4 @@ class Department extends Model
             'logo' => 'nullable|file|mimes:jpeg,gif,png|max:1024'
         ];
     }
-
-    /**
-     * Validation errors messages
-     *
-     * @return array
-     */
-    public static function messages()
-    {
-        return [
-            'required' => __('This field is required'),
-            'between' => __('Number of characters should be between :min and :max'),
-            'max' => __('Max allowed size is :max KB'),
-            'regex' => __('Unacceptable symbols'),
-            'file' => __('File upload failed'),
-            'mimes' => __('Wrong mime-type of the uploaded file')
-        ];
-    }
 }

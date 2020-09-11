@@ -36,14 +36,11 @@ class UserTest extends TestCase
     public function testUserClass()
     {
         $rules = User::rules();
-        $messages = User::messages();
         $this->assertClassHasAttribute('fillable', User::class);
         $this->assertClassHasAttribute('hidden', User::class);
         $this->assertClassHasAttribute('casts', User::class);
         $this->assertTrue(is_array($rules));
         $this->assertCount(3, $rules);
-        $this->assertTrue(is_array($messages));
-        $this->assertCount(6, $messages);
     }
 
     /**
