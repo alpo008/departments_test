@@ -89,12 +89,12 @@ export default {
         deleteUser(id) {
             if (confirm('Sure?')) {
                 axios.delete(this.indexUrl + '/' + id)
-                    .then(result => {
-                        if(result.data.code === 200) {
-                            this.getUsers(this.page)
-                        }
-                    })
-                    .catch(error => console.error(error))
+                .then(result => {
+                    if(result.data.code === 200) {
+                        this.getUsers(this.page)
+                    }
+                })
+                .catch(error => console.error(error))
             }
         }
     },

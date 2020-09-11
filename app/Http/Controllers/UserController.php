@@ -88,26 +88,47 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id) :Response
     {
-        //
+        $model = User::find($id);
+        if ($model instanceof User) {
+            $code = 200;
+            $data = [];
+            $model->fill($request->post());
+            $dirtyAttributes = $model->getDirty();
+            $rules = array_filter(User::rules(), function ($key) use($dirtyAttributes) {
+                return array_key_exists($key, $dirtyAttributes);
+            }, ARRAY_FILTER_USE_KEY);
+            $validator = Validator::make($dirtyAttributes, $rules, User::messages());
+            if ($validator->fails()) {
+                $code = 400;
+                $data = $validator->errors();
+            } else {
+                if ($model->isDirty('password')) {
+                    $model->password = bcrypt($model->password);
+                }
+                if ($model->save()) {
+                    $data = $model->getAttributes();
+                    if (!empty($data['password'])) {
+                        unset($data['password']);
+                    } else {
+                        $code = 400;
+                    }
+                }
+            }
+        } else {
+            return response(compact(404, []))
+                ->header('Content-Type', 'application/json')
+                ->setStatusCode(404);
+        }
+        return response(compact('code', 'data'))
+            ->header('Content-Type', 'application/json');
     }
 
     /**
