@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use App\User;
-use Faker\Provider\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -56,16 +54,6 @@ class DepartmentController extends Controller
         $departments = $departments ?? [];
         return response(compact('departments', 'page', 'totalPages'))
             ->header('Content-Type', 'application/json');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -134,17 +122,6 @@ class DepartmentController extends Controller
         }
         return response(compact('department', 'allUsers'))
             ->header('Content-Type', 'application/json');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Department  $department
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Department $department)
-    {
-        //
     }
 
     /**

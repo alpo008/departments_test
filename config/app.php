@@ -157,6 +157,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default settings for users pages
+    |--------------------------------------------------------------------------
+    |
+    | If these parameters are not set please take care about default
+    | constants in models and controllers.
+    |
+    */
+
+    'user' => [
+        'entriesPerPage' => 8
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
