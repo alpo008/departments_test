@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -134,11 +135,37 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(string $id) :Response
     {
-        //
+        $model = User::find($id);
+        if ($model instanceof User) {
+            $code = 200;
+            if (!empty($model->logo)) {
+                $parts = explode('/', $model->logo);
+                $logoFile = array_pop($parts);
+            }
+            DB::beginTransaction();
+            $model->departments()->detach();
+            try {
+                $commit = $model->delete();
+            } catch (\Exception $e) {
+                $commit = false;
+            }
+            if (!$commit) {
+                DB::rollBack();
+                $code = 400;
+            } else {
+                DB::commit();
+            }
+            return response(compact('code'))
+                ->header('Content-Type', 'application/json');
+        } else {
+            return response(compact(404, []))
+                ->header('Content-Type', 'application/json')
+                ->setStatusCode(404);
+        }
     }
 }

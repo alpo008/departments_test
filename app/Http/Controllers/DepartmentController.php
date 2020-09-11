@@ -62,7 +62,7 @@ class DepartmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) :Response
     {
         $code = 200;
         $data = [];
@@ -131,7 +131,7 @@ class DepartmentController extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id) :Response
     {
         $model = Department::find($id);
         if ($model instanceof Department) {
@@ -196,7 +196,7 @@ class DepartmentController extends Controller
      * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy(string $id) :Response
     {
         $model = Department::find($id);
         if ($model instanceof Department) {
