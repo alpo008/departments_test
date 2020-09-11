@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -41,33 +42,43 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) :Response
     {
-        //
+        $code = 200;
+        $data = [];
+        $post = $request->post();
+        $validator = Validator::make($post, User::rules(), User::messages());
+        if ($validator->fails()) {
+            $code = 400;
+            $data = $validator->errors();
+        } else {
+            $model = new User($post);
+            $model->password = bcrypt($model->password);
+            if ($model->save()) {
+                $data = $model->getAttributes();
+                if (!empty($data['password'])) {
+                    unset($data['password']);
+                } else {
+                    $code = 400;
+                }
+            }
+        }
+        return response(compact('code', 'data'))
+            ->header('Content-Type', 'application/json');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(string $id) :Response
     {
         if (!$user = User::find($id)) {
             $user = [];

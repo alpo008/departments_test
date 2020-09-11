@@ -2485,7 +2485,32 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         return _this.handleErrors(errors);
       });
     },
-    save: function save() {},
+    save: function save() {
+      var _this2 = this;
+
+      if (this.id) {
+        axios.patch(this.indexUrl + '/' + this.id, this.user).then(function (response) {
+          return _this2.handleResponse(response.data);
+        })["catch"](function (errors) {
+          return _this2.handleErrors(errors);
+        });
+      } else {
+        axios.post(this.indexUrl, this.user).then(function (response) {
+          return _this2.handleResponse(response.data);
+        })["catch"](function (errors) {
+          return _this2.handleErrors(errors);
+        });
+      }
+    },
+    handleResponse: function handleResponse(response) {
+      if (response.code === 200) {
+        this.errors = {};
+        this.$router.push('/users');
+      } else {
+        this.errors = response.data;
+        console.log(this.errors);
+      }
+    },
     handleErrors: function handleErrors(errors) {
       alert(errors.toString());
     },
@@ -39618,7 +39643,7 @@ var render = function() {
                   }
                 ],
                 staticClass: "form-control",
-                class: _vm.getError("name") ? "is-invalid" : "",
+                class: _vm.getError("email") ? "is-invalid" : "",
                 attrs: {
                   type: "email",
                   id: "inputEmail",
@@ -39635,7 +39660,7 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _vm.getError("name")
+              _vm.getError("email")
                 ? _c(
                     "span",
                     {
@@ -39686,7 +39711,7 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _vm.getError("name")
+              _vm.getError("password")
                 ? _c(
                     "span",
                     {

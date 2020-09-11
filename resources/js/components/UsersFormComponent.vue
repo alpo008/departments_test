@@ -23,12 +23,12 @@
                     <div class="col-sm-10">
                         <input type="email"
                                class="form-control"
-                               :class="getError('name') ? 'is-invalid' : ''"
+                               :class="getError('email') ? 'is-invalid' : ''"
                                id="inputEmail"
                                placeholder="Enter e-mail"
                                v-model="user.email"
                         >
-                        <span role="alert" class="invalid-feedback" v-if="getError('name')">
+                        <span role="alert" class="invalid-feedback" v-if="getError('email')">
                             <strong>{{ getError('email') }}</strong>
                         </span>
                     </div>
@@ -43,7 +43,7 @@
                                placeholder="Enter password"
                                v-model="user.password"
                         >
-                        <span role="alert" class="invalid-feedback" v-if="getError('name')">
+                        <span role="alert" class="invalid-feedback" v-if="getError('password')">
                             <strong>{{ getError('password') }}</strong>
                         </span>
                     </div>
@@ -84,7 +84,23 @@ export default {
                 .catch(errors => this.handleErrors(errors));
         },
         save() {
-
+            if (this.id) {
+                axios.patch(this.indexUrl + '/' + this.id, this.user)
+                    .then(response => this.handleResponse(response.data))
+                    .catch(errors => this.handleErrors(errors));
+            } else {
+                axios.post(this.indexUrl, this.user)
+                    .then(response => this.handleResponse(response.data))
+                    .catch(errors => this.handleErrors(errors));
+            }
+        },
+        handleResponse(response) {
+            if (response.code === 200) {
+                this.errors = {}
+                this.$router.push('/users')
+            } else {
+                this.errors = response.data;
+            }
         },
         handleErrors(errors) {
             alert(errors.toString())

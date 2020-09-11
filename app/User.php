@@ -60,4 +60,43 @@ class User extends Authenticatable
     {
         return $this->belongsToMany('App\Department');
     }
+
+    /**
+     * Validation rules for Department instances
+     *
+     * @param User|null $model
+     * @return array
+     */
+    public static function rules($model = null) :array
+    {
+        if ($model instanceof self) {
+            $nameUnique = '|unique:users,name,' . $model->id;
+            $emailUnique = '|unique:users,email,' . $model->id;
+        } else {
+            $nameUnique = '|unique:users';
+            $emailUnique = '|unique:users';
+        }
+        return [
+            'name' => 'required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s]+$/' . $nameUnique,
+            'email' => 'required|email' . $emailUnique,
+            'password' => 'required|alpha_dash|min:6'
+        ];
+    }
+
+    /**
+     * Validation errors messages
+     *
+     * @return array
+     */
+    public static function messages()
+    {
+        return [
+            'required' => __('This field is required'),
+            'email' => __('Invalid email'),
+            'between' => __('Number of characters should be between :min and :max'),
+            'min' => __('Minimum :min characters'),
+            'regex' => __('Unacceptable symbols'),
+            'alpha_dash' => __('Allowed latin letters, - and _'),
+        ];
+    }
 }
