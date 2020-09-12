@@ -1,9 +1,9 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <div class="page-title">Departments</div>
+            <div class="page-title">{{ $t('Departments') }}</div>
             <router-link :to="{name: 'addDepartment'}">
-                <a class="btn btn-primary">Add</a>
+                <a class="btn btn-primary">{{ $t('Add') }}</a>
             </router-link>
         </div>
         <div class="card-body">
@@ -23,7 +23,7 @@
                             <div class="description">{{ department.description }}</div>
                         </td>
                         <td>
-                            <p v-if="department.users.length"> Users: </p>
+                            <p v-if="department.users.length">{{ $t('Users') }}:</p>
                             <ol v-if="department.users.length">
                                 <li v-for="user in department.users">
                                     {{ user.name }}
@@ -32,7 +32,7 @@
                         </td>
                         <td>
                             <router-link :to="{name: 'editDepartment', params: {id: department.id}}">
-                                <a class="btn btn-secondary">Update</a>
+                                <a class="btn btn-secondary">{{ $t('Update') }}</a>
                             </router-link>
                         </td>
                         <td>
@@ -41,7 +41,7 @@
                                 class="btn btn-danger"
                                 @click.prevent="deleteDepartment(department.id)"
                             >
-                                Delete
+                                {{ $t('Delete') }}
                             </button>
                         </td>
                     </tr>
