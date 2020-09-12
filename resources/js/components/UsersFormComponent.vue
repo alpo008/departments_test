@@ -4,13 +4,13 @@
         <div class="card-body">
             <form @submit.prevent.stop="save">
                 <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                    <label for="inputName" class="col-sm-2 col-form-label">{{ $t('Name')}}</label>
                     <div class="col-sm-10">
                         <input type="text"
                                class="form-control"
                                :class="getError('name') ? 'is-invalid' : ''"
                                id="inputName"
-                               placeholder="Enter name"
+                               :placeholder="$t('Enter name')"
                                v-model="user.name"
                         >
                         <span role="alert" class="invalid-feedback" v-if="getError('name')">
@@ -19,13 +19,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                    <label for="inputEmail" class="col-sm-2 col-form-label">{{ $t('E-Mail') }}</label>
                     <div class="col-sm-10">
                         <input type="email"
                                class="form-control"
                                :class="getError('email') ? 'is-invalid' : ''"
                                id="inputEmail"
-                               placeholder="Enter e-mail"
+                               :placeholder="$t('Enter e-mail')"
                                v-model="user.email"
                         >
                         <span role="alert" class="invalid-feedback" v-if="getError('email')">
@@ -34,13 +34,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                    <label for="inputPassword" class="col-sm-2 col-form-label">{{ $t('Password') }}</label>
                     <div class="col-sm-10">
                         <input type="password"
                                class="form-control"
                                :class="getError('password') ? 'is-invalid' : ''"
                                id="inputPassword"
-                               placeholder="Enter password"
+                               :placeholder="$t('Enter password')"
                                v-model="user.password"
                         >
                         <span role="alert" class="invalid-feedback" v-if="getError('password')">
@@ -51,7 +51,7 @@
                 <div class="form-group row">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-primary">
-                            Save
+                            {{ $t('Save') }}
                         </button>
                     </div>
                 </div>
@@ -119,9 +119,9 @@ export default {
     computed: {
         headingText() {
             if (!this.id) {
-                return 'Add user'
+                return this.$t('Add user')
             }
-            return 'Update user'
+            return this.$t('Update user')
         }
     },
     beforeMount() {
@@ -135,6 +135,9 @@ export default {
 </script>
 
 <style scoped>
+.card-header {
+    font-size: 1.5rem;
+}
 input[type='password'] {
     white-space: nowrap;
     overflow: hidden;

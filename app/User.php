@@ -77,7 +77,7 @@ class User extends Authenticatable
             $emailUnique = '|unique:users';
         }
         return [
-            'name' => 'required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s]+$/' . $nameUnique,
+            'name' => 'required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s\.]+$/' . $nameUnique,
             'email' => 'required|email' . $emailUnique,
             'password' => 'required|alpha_dash|min:8'
         ];

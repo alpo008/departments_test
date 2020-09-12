@@ -2148,6 +2148,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "DepartmentsFormComponent",
   data: function data() {
@@ -2244,10 +2247,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   computed: {
     headingText: function headingText() {
       if (!this.id) {
-        return 'Add department';
+        return this.$t('Add department');
       }
 
-      return 'Update department';
+      return this.$t('Update department');
     }
   },
   beforeMount: function beforeMount() {
@@ -2530,10 +2533,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   computed: {
     headingText: function headingText() {
       if (!this.id) {
-        return 'Add user';
+        return this.$t('Add user');
       }
 
-      return 'Update user';
+      return this.$t('Update user');
     }
   },
   beforeMount: function beforeMount() {
@@ -7000,7 +7003,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ntextarea[data-v-6f180e23] {\n    width: 100%;\n}\n", ""]);
+exports.push([module.i, "\n.card-header[data-v-6f180e23] {\n    font-size: 1.5rem;\n}\ntextarea[data-v-6f180e23] {\n    width: 100%;\n}\nfieldset legend[data-v-6f180e23] {\n    padding-bottom: 7px;\n}\n.custom-file-input[data-v-6f180e23] {\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -7038,7 +7041,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ninput[type='password'][data-v-cb4476c8] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n", ""]);
+exports.push([module.i, "\n.card-header[data-v-cb4476c8] {\n    font-size: 1.5rem;\n}\ninput[type='password'][data-v-cb4476c8] {\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n}\n", ""]);
 
 // exports
 
@@ -41325,7 +41328,7 @@ var render = function() {
                 staticClass: "col-sm-2 col-form-label",
                 attrs: { for: "inputName" }
               },
-              [_vm._v("Name")]
+              [_vm._v(_vm._s(_vm.$t("Name")))]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-10" }, [
@@ -41340,7 +41343,11 @@ var render = function() {
                 ],
                 staticClass: "form-control",
                 class: _vm.getError("name") ? "is-invalid" : "",
-                attrs: { type: "text", id: "inputName" },
+                attrs: {
+                  type: "text",
+                  placeholder: _vm.$t("Department name"),
+                  id: "inputName"
+                },
                 domProps: { value: _vm.department.name },
                 on: {
                   input: function($event) {
@@ -41372,7 +41379,7 @@ var render = function() {
                 staticClass: "col-sm-2 col-form-label",
                 attrs: { for: "inputDescription" }
               },
-              [_vm._v("Description")]
+              [_vm._v(_vm._s(_vm.$t("Description")))]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-10" }, [
@@ -41389,6 +41396,7 @@ var render = function() {
                 attrs: {
                   name: "description",
                   id: "inputDescription",
+                  placeholder: _vm.$t("Department description"),
                   rows: "3"
                 },
                 domProps: { value: _vm.department.description },
@@ -41420,7 +41428,11 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "form-group row" }, [
-            _c("div", { staticClass: "custom-file" }, [
+            _c("div", { staticClass: "col-sm-2" }, [
+              _vm._v(_vm._s(_vm.$t("Logo")))
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "custom-file col-sm-10" }, [
               _c("input", {
                 staticClass: "custom-file-input",
                 class: _vm.getError("logo") ? "is-invalid" : "",
@@ -41443,7 +41455,9 @@ var render = function() {
                 },
                 [
                   _vm._v(
-                    "\n                        Choose file\n                    "
+                    "\n                        " +
+                      _vm._s(_vm.$t("Choose logo")) +
+                      "\n                    "
                   )
                 ]
               ),
@@ -41464,7 +41478,7 @@ var render = function() {
           _c("fieldset", { staticClass: "form-group" }, [
             _c("div", { staticClass: "row" }, [
               _c("legend", { staticClass: "col-form-label col-sm-2 pt-0" }, [
-                _vm._v("Users")
+                _vm._v(_vm._s(_vm.$t("Users")))
               ]),
               _vm._v(" "),
               _c(
@@ -41515,28 +41529,27 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm._m(0)
+          _c("div", { staticClass: "form-group row" }, [
+            _c("div", { staticClass: "col-sm-10" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("Save")) +
+                      "\n                    "
+                  )
+                ]
+              )
+            ])
+          ])
         ]
       )
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row" }, [
-      _c("div", { staticClass: "col-sm-10" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [_vm._v("\n                        Save\n                    ")]
-        )
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -41563,10 +41576,14 @@ var render = function() {
       "div",
       { staticClass: "card-header" },
       [
-        _c("div", { staticClass: "page-title" }, [_vm._v("Users")]),
+        _c("div", { staticClass: "page-title" }, [
+          _vm._v(_vm._s(_vm.$t("Users")))
+        ]),
         _vm._v(" "),
         _c("router-link", { attrs: { to: { name: "addUser" } } }, [
-          _c("a", { staticClass: "btn btn-primary" }, [_vm._v("Add")])
+          _c("a", { staticClass: "btn btn-primary" }, [
+            _vm._v(_vm._s(_vm.$t("Add")))
+          ])
         ])
       ],
       1
@@ -41613,7 +41630,7 @@ var render = function() {
                         },
                         [
                           _c("a", { staticClass: "btn btn-secondary" }, [
-                            _vm._v("Update")
+                            _vm._v(_vm._s(_vm.$t("Update")))
                           ])
                         ]
                       )
@@ -41636,7 +41653,9 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Delete\n                    "
+                          "\n                        " +
+                            _vm._s(_vm.$t("Delete")) +
+                            "\n                    "
                         )
                       ]
                     )
@@ -41745,7 +41764,7 @@ var render = function() {
                 staticClass: "col-sm-2 col-form-label",
                 attrs: { for: "inputName" }
               },
-              [_vm._v("Name")]
+              [_vm._v(_vm._s(_vm.$t("Name")))]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-10" }, [
@@ -41763,7 +41782,7 @@ var render = function() {
                 attrs: {
                   type: "text",
                   id: "inputName",
-                  placeholder: "Enter name"
+                  placeholder: _vm.$t("Enter name")
                 },
                 domProps: { value: _vm.user.name },
                 on: {
@@ -41796,7 +41815,7 @@ var render = function() {
                 staticClass: "col-sm-2 col-form-label",
                 attrs: { for: "inputEmail" }
               },
-              [_vm._v("Email")]
+              [_vm._v(_vm._s(_vm.$t("E-Mail")))]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-10" }, [
@@ -41814,7 +41833,7 @@ var render = function() {
                 attrs: {
                   type: "email",
                   id: "inputEmail",
-                  placeholder: "Enter e-mail"
+                  placeholder: _vm.$t("Enter e-mail")
                 },
                 domProps: { value: _vm.user.email },
                 on: {
@@ -41847,7 +41866,7 @@ var render = function() {
                 staticClass: "col-sm-2 col-form-label",
                 attrs: { for: "inputPassword" }
               },
-              [_vm._v("Password")]
+              [_vm._v(_vm._s(_vm.$t("Password")))]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "col-sm-10" }, [
@@ -41865,7 +41884,7 @@ var render = function() {
                 attrs: {
                   type: "password",
                   id: "inputPassword",
-                  placeholder: "Enter password"
+                  placeholder: _vm.$t("Enter password")
                 },
                 domProps: { value: _vm.user.password },
                 on: {
@@ -41891,28 +41910,27 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _vm._m(0)
+          _c("div", { staticClass: "form-group row" }, [
+            _c("div", { staticClass: "col-sm-10" }, [
+              _c(
+                "button",
+                { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("Save")) +
+                      "\n                    "
+                  )
+                ]
+              )
+            ])
+          ])
         ]
       )
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group row" }, [
-      _c("div", { staticClass: "col-sm-10" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [_vm._v("\n                        Save\n                    ")]
-        )
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -57710,10 +57728,10 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************************!*\
   !*** ./resources/lang/ru.json ***!
   \********************************/
-/*! exports provided: Add, Delete, Departments, E-Mail Address, Forgot Your Password?, Login, Logout, Password, Remember Me, Reset Password, Send Password Reset Link, Update, Users, default */
+/*! exports provided: Add, Add department, Add user, Choose logo, Delete, Departments, Department description, Department name, Description, Enter e-mail, Enter name, Enter password, E-Mail, E-Mail Address, Forgot Your Password?, Login, Logo, Logout, Name, Password, Remember Me, Reset Password, Save, Send Password Reset Link, Update, Update department, Update user, Users, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Add\":\"Добавить\",\"Delete\":\"Удалить\",\"Departments\":\"Отделы\",\"E-Mail Address\":\"Ваш e-mail\",\"Forgot Your Password?\":\"Забыли пароль?\",\"Login\":\"Авторизация\",\"Logout\":\"Выход\",\"Password\":\"Пароль\",\"Remember Me\":\"Запомнить меня\",\"Reset Password\":\"Восстановление пароля\",\"Send Password Reset Link\":\"Получить ссылку для восстановления пароля\",\"Update\":\"Редактировать\",\"Users\":\"Пользователи\"}");
+module.exports = JSON.parse("{\"Add\":\"Добавить\",\"Add department\":\"Добавление отдела\",\"Add user\":\"Добавление пользователя\",\"Choose logo\":\"Выбрать файл для логотипа\",\"Delete\":\"Удалить\",\"Departments\":\"Отделы\",\"Department description\":\"Описание отдела\",\"Department name\":\"Наименование отдела\",\"Description\":\"Описание\",\"Enter e-mail\":\"E-mail пользователя\",\"Enter name\":\"Имя пользователя\",\"Enter password\":\"Пароль для пользователя\",\"E-Mail\":\"E-mail\",\"E-Mail Address\":\"Ваш e-mail\",\"Forgot Your Password?\":\"Забыли пароль?\",\"Login\":\"Авторизация\",\"Logo\":\"Логотип\",\"Logout\":\"Выход\",\"Name\":\"Имя\",\"Password\":\"Пароль\",\"Remember Me\":\"Запомнить меня\",\"Reset Password\":\"Восстановление пароля\",\"Save\":\"Сохранить\",\"Send Password Reset Link\":\"Получить ссылку для восстановления пароля\",\"Update\":\"Редактировать\",\"Update department\":\"Редактирование отдела\",\"Update user\":\"Редактирование пользователя\",\"Users\":\"Пользователи\"}");
 
 /***/ }),
 

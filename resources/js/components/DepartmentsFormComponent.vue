@@ -4,11 +4,12 @@
         <div class="card-body">
             <form enctype="multipart/form-data" @submit.prevent.stop="save">
                 <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                    <label for="inputName" class="col-sm-2 col-form-label">{{ $t('Name') }}</label>
                     <div class="col-sm-10">
                         <input type="text"
                                class="form-control"
                                :class="getError('name') ? 'is-invalid' : ''"
+                               :placeholder="$t('Department name')"
                                id="inputName"
                                v-model="department.name"
                         >
@@ -18,12 +19,13 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputDescription" class="col-sm-2 col-form-label">Description</label>
+                    <label for="inputDescription" class="col-sm-2 col-form-label">{{ $t('Description') }}</label>
                     <div class="col-sm-10">
                         <textarea
                             name="description"
                             id="inputDescription"
                             :class="getError('description') ? 'is-invalid' : ''"
+                            :placeholder="$t('Department description')"
                             rows="3"
                             v-model="department.description"
                         >
@@ -34,7 +36,8 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="custom-file">
+                    <div class="col-sm-2">{{ $t('Logo') }}</div>
+                    <div class="custom-file col-sm-10">
                         <input type="file"
                                class="custom-file-input"
                                :class="getError('logo') ? 'is-invalid' : ''"
@@ -43,7 +46,7 @@
                                accept="image/png, image/jpeg, image/gif"
                         >
                         <label class="custom-file-label" for="inputLogo" aria-describedby="inputGroupFileAddon02">
-                            Choose file
+                            {{ $t('Choose logo') }}
                         </label>
                         <span role="alert" class="invalid-feedback" v-if="getError('logo')">
                             <strong>{{ getError('logo') }}</strong>
@@ -52,7 +55,7 @@
                 </div>
                 <fieldset class="form-group">
                     <div class="row">
-                        <legend class="col-form-label col-sm-2 pt-0">Users</legend>
+                        <legend class="col-form-label col-sm-2 pt-0">{{ $t('Users') }}</legend>
                         <div class="col-sm-10">
                             <div class="form-check" v-for="user in allUsers">
                                 <input class="form-check-input"
@@ -72,7 +75,7 @@
                 <div class="form-group row">
                     <div class="col-sm-10">
                         <button type="submit" class="btn btn-primary">
-                            Save
+                            {{ $t('Save') }}
                         </button>
                     </div>
                 </div>
@@ -167,9 +170,9 @@ export default {
     computed: {
         headingText() {
             if (!this.id) {
-                return 'Add department'
+                return this.$t('Add department')
             }
-            return 'Update department'
+            return this.$t('Update department')
         }
     },
     beforeMount() {
@@ -183,7 +186,16 @@ export default {
 </script>
 
 <style scoped>
+.card-header {
+    font-size: 1.5rem;
+}
 textarea {
     width: 100%;
+}
+fieldset legend {
+    padding-bottom: 7px;
+}
+.custom-file-input {
+    cursor: pointer;
 }
 </style>

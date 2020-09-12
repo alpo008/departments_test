@@ -1,9 +1,9 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <div class="page-title">Users</div>
+            <div class="page-title">{{ $t('Users') }}</div>
             <router-link :to="{name: 'addUser'}">
-                <a class="btn btn-primary">Add</a>
+                <a class="btn btn-primary">{{ $t('Add') }}</a>
             </router-link>
         </div>
         <div class="card-body">
@@ -21,7 +21,7 @@
                     </td>
                     <td>
                         <router-link :to="{name: 'editUser', params: {id: user.id}}">
-                            <a class="btn btn-secondary">Update</a>
+                            <a class="btn btn-secondary">{{ $t('Update') }}</a>
                         </router-link>
                     </td>
                     <td>
@@ -30,7 +30,7 @@
                             class="btn btn-danger"
                             @click.prevent="deleteUser(user.id)"
                         >
-                            Delete
+                            {{ $t('Delete') }}
                         </button>
                     </td>
                 </tr>
