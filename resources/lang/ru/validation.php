@@ -77,7 +77,7 @@ return [
         'array' => 'The :attribute must not have more than :value items.',
     ],
     'max' => [
-        'numeric' => 'Значение :attribute не должно превышать :max.',
+        'numeric' => 'Значение :attribute не должно превышать :max',
         'file' => 'Размер файла не должен быть больше :max килобайт.',
         'string' => 'Поле :attribute не должно содержать более :max символов.',
         'array' => 'Массив :attribute не должен содержать более :max элементов.',
@@ -105,7 +105,7 @@ return [
     'required_without_all' => 'The :attribute field is required when none of :values are present.',
     'same' => 'The :attribute and :other must match.',
     'size' => [
-        'numeric' => 'The :attribute must be :size.',
+        'numeric' => 'The :attribute must be :size',
         'file' => 'The :attribute must be :size kilobytes.',
         'string' => 'The :attribute must be :size characters.',
         'array' => 'The :attribute must contain :size items.',

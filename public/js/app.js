@@ -2196,7 +2196,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         if (_typeof(uploadedFile) === 'object') {
           this.logoFile.name = uploadedFile.name;
           this.logoFile.mimeType = uploadedFile.type;
-          this.logoFile.size = Math.ceil(uploadedFile.size / 1000);
+          this.logoFile.size = Math.ceil(uploadedFile.size / 1024);
           this.logoFile.ext = uploadedFile.name.substring(uploadedFile.name.indexOf(".") + 1);
           var fileReader = new FileReader();
           fileReader.readAsDataURL(uploadedFile);

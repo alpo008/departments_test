@@ -126,7 +126,7 @@ export default {
                 if (typeof uploadedFile === 'object') {
                     this.logoFile.name = uploadedFile.name
                     this.logoFile.mimeType = uploadedFile.type
-                    this.logoFile.size = Math.ceil(uploadedFile.size / 1000)
+                    this.logoFile.size = Math.ceil(uploadedFile.size / 1024)
                     this.logoFile.ext = uploadedFile.name.substring(uploadedFile.name.indexOf(".")+1);
                     let fileReader = new FileReader()
                     fileReader.readAsDataURL(uploadedFile);
