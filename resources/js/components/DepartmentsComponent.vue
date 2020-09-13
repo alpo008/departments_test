@@ -24,7 +24,6 @@
                         </td>
                         <td>
                             <p v-if="department.users.length">{{ $t('Users') }}:</p>
-                            <p v-if="department.users.length">{{ $t('Users') }}:</p>
                             <ol v-if="department.users.length">
                                 <li v-for="user in department.users">
                                     {{ user.name }}
