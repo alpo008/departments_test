@@ -53,7 +53,7 @@
                               v-if="getError('mimeType') || getError('ext') || getError('size')">
                             <strong v-if="getError('mimeType')">{{ getError('mimeType') }}</strong> &nbsp;
                             <strong v-if="getError('ext')">{{ getError('ext') }}</strong> &nbsp;
-                            <strong v-if="getError('size')">{{ getError('size') }}</strong>
+                            <strong v-if="getError('size')">{{ getError('size') }} KB</strong>
                         </span>
                     </div>
                 </div>

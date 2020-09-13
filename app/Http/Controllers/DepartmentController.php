@@ -131,7 +131,7 @@ class DepartmentController extends Controller
                 ->header('Content-Type', 'application/json')
                 ->setStatusCode(404);
         }
-        return response(compact('code', 'data'))
+        return response(compact('code', 'data', 'errors'))
             ->header('Content-Type', 'application/json');
     }
 
