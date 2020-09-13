@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Department;
+use App\User;
+use Carbon\Carbon;
+
 class HomeController extends Controller
 {
     /**
@@ -16,13 +20,34 @@ class HomeController extends Controller
     }
 
     /**
-     * Shows the application dashboard.
+     * Shows the application statistics.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
     {
-        return view('home');
+        $usersTotal = User::count();
+        $unlinkedUsers = $users = User::whereNotIn('id', function ($query) {
+            $query->select('user_id')
+                ->distinct()
+                ->from('department_user');
+        })->count();
+        $departmentsTotal = Department::count();
+        $departmentsWithUsers = Department::join('department_user', 'department_user.department_id', '=', 'departments.id')
+            ->distinct('departments.id')
+            ->count();
+        $usersLastUpdate = User::max('updated_at');
+        $departmentsLastUpdate = Department::max('updated_at');
+        $lastUpdate = max($usersLastUpdate, $departmentsLastUpdate);
+        $lastUpdate = Carbon::createFromFormat('Y-m-d H:i:s', $lastUpdate)
+            ->format('d.m.Y H:i:s');
+        return view('home', compact(
+            'usersTotal',
+            'unlinkedUsers',
+            'departmentsTotal',
+            'departmentsWithUsers',
+            'lastUpdate'
+        ));
     }
 
     /**
