@@ -6,10 +6,8 @@ use App\Department;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class DepartmentController extends Controller
 {
@@ -31,7 +29,7 @@ class DepartmentController extends Controller
     /**
      * Default path to store logo image
      */
-    const DEFAULT_LOGO_SAVE_PATH = 'public/logo';
+    const DEFAULT_LOGO_SAVE_PATH = 'app/public/logo/';
 
     /**
      * Returns a listing of the resource.
@@ -66,43 +64,17 @@ class DepartmentController extends Controller
     {
         $code = 200;
         $data = [];
-        $post = $this->getPost($request);
-        $postFields = $post['postFields'] ?? [];
-        $users = $post['users'] ?? [];
-        $fileName = $post['fileName'] ?? '';
-        $logo = $postFields['logo'] ?? null;
-        $logoSrcPath = config('app.department.logoSrcPath', self::DEFAULT_LOGO_SRC_PATH);
-        $validator = Validator::make($postFields, Department::rules());
-        if ($validator->fails()) {
+        $post = $request->post();
+        $errors = $this->validateRequest($post);
+
+        if (count($errors)) {
             $code = 400;
-            $data = $validator->errors();
         } else {
-            $postFields['logo'] = !empty($fileName) ? $logoSrcPath . $fileName : null;
-
-            DB::beginTransaction();
-
-            $model = new Department($postFields);
-            if ($commit = $model->save()) {
-                if ($logo instanceof UploadedFile && !empty($fileName)) {
-                    if (!$this->saveFile($logo, $fileName)) {
-                        $model->logo = null;
-                        $commit = $model->save();
-                    }
-                }
-            }
-            try {
-                $model->users()->sync($users);
-            } catch (\Exception $e) {
-                $commit = false;
-            }
-            if ($commit) {
-                DB::commit();
-                $data = $model->attributesToArray();
-            } else {
-                DB::rollBack();
-            }
+            $model = new Department($request->post('department'));
+            $data = $this->saveModel($model, $request->post('users'), $request->post('logoFile'));
         }
-        return response(compact('code', 'data'))
+
+        return response(compact('code', 'data', 'errors'))
             ->header('Content-Type', 'application/json');
     }
 
@@ -137,49 +109,22 @@ class DepartmentController extends Controller
         if ($model instanceof Department) {
             $code = 200;
             $data = [];
-            $post = $this->getPost($request);
-            $postFields = $post['postFields'] ?? [];
-            $users = $post['users'] ?? [];
-            $fileName = $post['fileName'] ?? '';
-            $logo = $postFields['logo'] ?? null;
-            $oldFile = null;
-            if (!empty($model->logo)) {
-                $parts = explode('/', $model->logo);
-                $oldFile = array_pop($parts);
-            }
-            $logoSrcPath = config('app.department.logoSrcPath', self::DEFAULT_LOGO_SRC_PATH);
-            $validator = Validator::make($postFields, Department::rules($model));
-            if ($validator->fails()) {
+            $post = $request->json()->all();
+            $errors = $this->validateRequest($post, $model);
+
+            if (count($errors)) {
                 $code = 400;
-                $data = $validator->errors();
             } else {
-                $model->name = $postFields['name'];
-                $model->description = $postFields['description'];
-
-                DB::beginTransaction();
-
-                if ($commit = $model->save()) {
-                    if ($logo instanceof UploadedFile && !empty($fileName)) {
-                        if ($this->saveFile($logo, $fileName)) {
-                            $model->logo = $logoSrcPath . $fileName;
-                            $commit = $model->save();
-                        }
-                        if (!empty($oldFile)) {
-                            $this->deleteFile($oldFile);
-                        }
-                    }
+                $department = $post['department'] ?? [];
+                $users = $post['users'] ?? [];
+                $logoFile = $post['logoFile'] ?? [];
+                if (!empty($department['name'])) {
+                    $model->name = $department['name'];
                 }
-                try {
-                    $model->users()->sync($users);
-                } catch (\Exception $e) {
-                    $commit = false;
+                if (!empty($department['description'])) {
+                    $model->description = $department['description'];
                 }
-                if ($commit) {
-                    DB::commit();
-                    $data = $model->attributesToArray();
-                } else {
-                    DB::rollBack();
-                }
+                $data = $this->saveModel($model, $users, $logoFile);
             }
         } else {
             return response(compact(404, []))
@@ -231,20 +176,89 @@ class DepartmentController extends Controller
     }
 
     /**
-     * Saving uploaded file
+     * Saving model, updating relations with users and store logo if exists
      *
-     * @param UploadedFile $file
-     * @param string $fileName
-     * @return bool
+     * @param Department $model
+     * @param array $users
+     * @param array $logoFile
+     * @return array
      */
-    protected function saveFile(UploadedFile $file, string $fileName) :bool
+    protected function saveModel(Department $model, array $users, array $logoFile)
     {
-        $logoSavePath = config('app.department.logoSavePath', self::DEFAULT_LOGO_SAVE_PATH);
-        return $file->storeAs($logoSavePath, $fileName);
+        DB::beginTransaction();
+        $commit = $model->save();
+        if (!empty($users) && is_array($users)) {
+            try {
+                $model->users()->sync($users);
+            } catch (\Exception $e) {
+                $commit = false;
+            }
+        }
+        if ($commit) {
+            DB::commit();
+            $data = $model->attributesToArray();
+            if (!empty($logoFile)) {
+                $this->handleLogoFile($logoFile, $model);
+            }
+        } else {
+            DB::rollBack();
+        }
+        return $data ?? [];
     }
 
     /**
-     * Deleting uploaded file
+     * Validates request and returns errors array if any
+     *
+     * @param array $post
+     * @param Department|null $model
+     * @return array
+     */
+    protected function validateRequest(array $post, $model = null) :array
+    {
+        $departmentErrors = [];
+        $fileErrors = [];
+        $department = $post['department'] ?? [];
+        $validator = Validator::make($department, Department::rules($model));
+        if ($validator->fails()) {
+            $departmentErrors = $validator->errors()->messages();
+        }
+        if (!empty($post['logoFile'])) {
+            $validator = Validator::make($post['logoFile'], Department::fileRules());
+            if ($validator->fails()) {
+                $fileErrors = $validator->errors()->messages();
+            }
+        }
+        return array_merge($departmentErrors, $fileErrors);
+    }
+
+    /**
+     * Saving or updating logo file
+     *
+     * @param array $logoFile
+     * @param Department $model
+     */
+    protected function handleLogoFile(array $logoFile, Department $model) :void
+    {
+        $logoSavePath = config('app.department.logoSavePath', self::DEFAULT_LOGO_SAVE_PATH);
+        $logoSrcPath = config('app.department.logoSrcPath', self::DEFAULT_LOGO_SRC_PATH);
+        if (!!$model->logo) {
+            $oldLogoFile = str_replace($logoSrcPath, '', $model->logo);
+        }
+        if (!empty($logoFile['ext']) && !empty($logoFile['body'])) {
+            $data = preg_replace('#^data:image/\w+;base64,#i', '', $logoFile['body']);
+            $fileName = uniqid() . '.' . $logoFile['ext'];
+            if (file_put_contents(storage_path($logoSavePath) . $fileName, base64_decode($data))) {
+                $model->logo = $logoSrcPath . $fileName;
+                if ($model->save() && !empty($oldLogoFile)) {
+                    $this->deleteFile($oldLogoFile);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Deleting logo file
      *
      * @param string $fileName
      * @return bool
@@ -253,40 +267,11 @@ class DepartmentController extends Controller
     {
         $logoSavePath = config('app.department.logoSavePath', self::DEFAULT_LOGO_SAVE_PATH);
         try {
-            $result = unlink(storage_path(
-                'app' . DIRECTORY_SEPARATOR .$logoSavePath . DIRECTORY_SEPARATOR . $fileName)
+            $result = unlink(storage_path($logoSavePath . $fileName)
             );
         } catch (\Exception $e) {
             $result= false;
         }
         return $result;
-    }
-
-    /**
-     * Retrieving data from create / update request
-     *
-     * @param Request $request
-     * @return array
-     */
-    protected function getPost(Request $request) :array
-    {
-        $postFields = [];
-        $fileName = '';
-        if ($department = $request->post('department')) {
-            $postFields = json_decode($department, true);
-            if (!empty($postFields['logo']) && is_string($postFields['logo'])) {
-                $postFields['logo'] = null;
-            }
-        }
-        if ($users = $request->post('users')) {
-            $users = json_decode($users);
-        } else {
-            $users = [];
-        }
-        if ($logo = $request->file('logo')) {
-            $postFields['logo'] = $logo;
-            $fileName = (string)Str::uuid() . '.' . $logo->getClientOriginalExtension();
-        }
-        return compact('postFields', 'users', 'fileName');
     }
 }

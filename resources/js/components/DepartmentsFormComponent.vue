@@ -40,7 +40,7 @@
                     <div class="custom-file col-sm-10">
                         <input type="file"
                                class="custom-file-input"
-                               :class="getError('logo') ? 'is-invalid' : ''"
+                               :class="getError('mimeType') || getError('ext') || getError('size') ? 'is-invalid' : ''"
                                id="inputLogo"
                                @change="handleLogo"
                                accept="image/png, image/jpeg, image/gif"
@@ -48,8 +48,12 @@
                         <label class="custom-file-label" for="inputLogo" aria-describedby="inputGroupFileAddon02">
                             {{ $t('Choose logo') }}
                         </label>
-                        <span role="alert" class="invalid-feedback" v-if="getError('logo')">
-                            <strong>{{ getError('logo') }}</strong>
+                        <span role="alert"
+                              class="invalid-feedback"
+                              v-if="getError('mimeType') || getError('ext') || getError('size')">
+                            <strong v-if="getError('mimeType')">{{ getError('mimeType') }}</strong> &nbsp;
+                            <strong v-if="getError('ext')">{{ getError('ext') }}</strong> &nbsp;
+                            <strong v-if="getError('size')">{{ getError('size') }}</strong>
                         </span>
                     </div>
                 </div>
@@ -94,7 +98,7 @@ export default {
             allUsers: [],
             selectedUsers: [],
             id: 0,
-            logo: '',
+            logoFile: {},
             errors: {}
         };
     },
@@ -118,31 +122,41 @@ export default {
         },
         handleLogo(e) {
             if (e.target.files.length) {
-                this.logo = e.target.files[0];
+                let uploadedFile = e.target.files[0];
+                if (typeof uploadedFile === 'object') {
+                    this.logoFile.name = uploadedFile.name
+                    this.logoFile.mimeType = uploadedFile.type
+                    this.logoFile.size = Math.ceil(uploadedFile.size / 1000)
+                    this.logoFile.ext = uploadedFile.name.substring(uploadedFile.name.indexOf(".")+1);
+                    let fileReader = new FileReader()
+                    fileReader.readAsDataURL(uploadedFile);
+                    fileReader.onload = (event) => {
+                        this.logoFile.body = event.target.result
+                    };
+                    fileReader.onerror = function() {
+                        console.error(fileReader.error);
+                    };
+                }
             }
         },
         save() {
-            let formData = new FormData();
-            let url;
-            formData.append('logo', this.logo);
-            formData.append('department', JSON.stringify(this.department));
-            formData.append('users', JSON.stringify(this.selectedUsers));
+            let dataObject = {department: this.department, users: this.selectedUsers, logoFile: this.logoFile}
             if (this.id) {
-                formData.append('_method', 'PATCH')
-                url = this.indexUrl + '/' + this.id
+                axios.patch(this.indexUrl + '/' + this.id, JSON.stringify(dataObject))
+                    .then(response => this.handleResponse(response.data))
+                    .catch(errors => this.handleErrors(errors));
             } else {
-                url = this.indexUrl
+                axios.post(this.indexUrl, dataObject)
+                    .then(response => this.handleResponse(response.data))
+                    .catch(errors => this.handleErrors(errors));
             }
-            axios.post(url, formData)
-                .then(response => this.handleResponse(response.data))
-                .catch(errors => this.handleErrors(errors));
         },
         handleResponse(response) {
             if (response.code === 200) {
                 this.errors = {}
                 this.$router.push('/departments')
             } else {
-                this.errors = response.data;
+                this.errors = response.errors;
             }
         },
         handleErrors(errors) {
@@ -152,7 +166,7 @@ export default {
             let errors = this.errors[name]
             if (typeof errors === 'string') {
                 return errors
-            }
+                }
             if (typeof errors === 'object' && typeof errors[0] === 'string') {
                 return errors[0]
             }
@@ -186,16 +200,16 @@ export default {
 </script>
 
 <style scoped>
-.card-header {
-    font-size: 1.5rem;
-}
-textarea {
-    width: 100%;
-}
-fieldset legend {
-    padding-bottom: 7px;
-}
-.custom-file-input {
-    cursor: pointer;
-}
+    .card-header {
+        font-size: 1.5rem;
+    }
+    textarea {
+        width: 100%;
+    }
+    fieldset {
+        padding: 1rem 0
+    }
+    .custom-file-input {
+        cursor: pointer;
+    }
 </style>

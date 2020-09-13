@@ -24,6 +24,7 @@
                         </td>
                         <td>
                             <p v-if="department.users.length">{{ $t('Users') }}:</p>
+                            <p v-if="department.users.length">{{ $t('Users') }}:</p>
                             <ol v-if="department.users.length">
                                 <li v-for="user in department.users">
                                     {{ user.name }}
@@ -102,7 +103,7 @@ export default {
             return !!path ? path : defaultImagePath
         },
         deleteDepartment(id) {
-            if (confirm('Sure?')) {
+            if (confirm(this.$t('Sure?'))) {
                 axios.delete(this.indexUrl + '/' + id)
                 .then(result => {
                     if(result.data.code === 200) {

@@ -152,7 +152,7 @@ return [
     'department' => [
         'entriesPerPage' => 4,
         'logoSrcPath' => '/storage/logo/',
-        'logoSavePath' => 'public/logo'
+        'logoSavePath' => 'app/public/logo/'
     ],
 
     /*

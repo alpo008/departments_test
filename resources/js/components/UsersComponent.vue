@@ -87,7 +87,7 @@ export default {
                 .catch(error => console.error(error));
         },
         deleteUser(id) {
-            if (confirm('Sure?')) {
+            if (confirm(this.$t('Sure?'))) {
                 axios.delete(this.indexUrl + '/' + id)
                 .then(result => {
                     if(result.data.code === 200) {

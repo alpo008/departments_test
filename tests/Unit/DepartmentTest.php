@@ -36,7 +36,7 @@ class DepartmentTest extends TestCase
         $rules = Department::rules();
         $this->assertClassHasAttribute('fillable', Department::class);
         $this->assertTrue(is_array($rules));
-        $this->assertCount(3, $rules);
+        $this->assertCount(2, $rules);
     }
 
     /**

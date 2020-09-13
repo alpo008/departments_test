@@ -2001,6 +2001,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Departments',
   data: function data() {
@@ -2036,7 +2037,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     deleteDepartment: function deleteDepartment(id) {
       var _this2 = this;
 
-      if (confirm('Sure?')) {
+      if (confirm(this.$t('Sure?'))) {
         axios["delete"](this.indexUrl + '/' + id).then(function (result) {
           if (result.data.code === 200) {
             _this2.getDepartments(_this2.page);
@@ -2151,6 +2152,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "DepartmentsFormComponent",
   data: function data() {
@@ -2160,7 +2165,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       allUsers: [],
       selectedUsers: [],
       id: 0,
-      logo: '',
+      logoFile: {},
       errors: {}
     };
   },
@@ -2184,38 +2189,58 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       });
     },
     handleLogo: function handleLogo(e) {
+      var _this2 = this;
+
       if (e.target.files.length) {
-        this.logo = e.target.files[0];
+        var uploadedFile = e.target.files[0];
+
+        if (_typeof(uploadedFile) === 'object') {
+          this.logoFile.name = uploadedFile.name;
+          this.logoFile.mimeType = uploadedFile.type;
+          this.logoFile.size = Math.ceil(uploadedFile.size / 1000);
+          this.logoFile.ext = uploadedFile.name.substring(uploadedFile.name.indexOf(".") + 1);
+          var fileReader = new FileReader();
+          fileReader.readAsDataURL(uploadedFile);
+
+          fileReader.onload = function (event) {
+            _this2.logoFile.body = event.target.result;
+          };
+
+          fileReader.onerror = function () {
+            console.error(fileReader.error);
+          };
+        }
       }
     },
     save: function save() {
-      var _this2 = this;
+      var _this3 = this;
 
-      var formData = new FormData();
-      var url;
-      formData.append('logo', this.logo);
-      formData.append('department', JSON.stringify(this.department));
-      formData.append('users', JSON.stringify(this.selectedUsers));
+      var dataObject = {
+        department: this.department,
+        users: this.selectedUsers,
+        logoFile: this.logoFile
+      };
 
       if (this.id) {
-        formData.append('_method', 'PATCH');
-        url = this.indexUrl + '/' + this.id;
+        axios.patch(this.indexUrl + '/' + this.id, JSON.stringify(dataObject)).then(function (response) {
+          return _this3.handleResponse(response.data);
+        })["catch"](function (errors) {
+          return _this3.handleErrors(errors);
+        });
       } else {
-        url = this.indexUrl;
+        axios.post(this.indexUrl, dataObject).then(function (response) {
+          return _this3.handleResponse(response.data);
+        })["catch"](function (errors) {
+          return _this3.handleErrors(errors);
+        });
       }
-
-      axios.post(url, formData).then(function (response) {
-        return _this2.handleResponse(response.data);
-      })["catch"](function (errors) {
-        return _this2.handleErrors(errors);
-      });
     },
     handleResponse: function handleResponse(response) {
       if (response.code === 200) {
         this.errors = {};
         this.$router.push('/departments');
       } else {
-        this.errors = response.data;
+        this.errors = response.errors;
       }
     },
     handleErrors: function handleErrors(errors) {
@@ -2369,7 +2394,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     deleteUser: function deleteUser(id) {
       var _this2 = this;
 
-      if (confirm('Sure?')) {
+      if (confirm(this.$t('Sure?'))) {
         axios["delete"](this.indexUrl + '/' + id).then(function (result) {
           if (result.data.code === 200) {
             _this2.getUsers(_this2.page);
@@ -7003,7 +7028,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.card-header[data-v-6f180e23] {\n    font-size: 1.5rem;\n}\ntextarea[data-v-6f180e23] {\n    width: 100%;\n}\nfieldset legend[data-v-6f180e23] {\n    padding-bottom: 7px;\n}\n.custom-file-input[data-v-6f180e23] {\n    cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\n.card-header[data-v-6f180e23] {\n    font-size: 1.5rem;\n}\ntextarea[data-v-6f180e23] {\n    width: 100%;\n}\nfieldset[data-v-6f180e23] {\n    padding: 1rem 0\n}\n.custom-file-input[data-v-6f180e23] {\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -41162,6 +41187,10 @@ var render = function() {
                       : _vm._e(),
                     _vm._v(" "),
                     department.users.length
+                      ? _c("p", [_vm._v(_vm._s(_vm.$t("Users")) + ":")])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    department.users.length
                       ? _c(
                           "ol",
                           _vm._l(department.users, function(user) {
@@ -41435,7 +41464,12 @@ var render = function() {
             _c("div", { staticClass: "custom-file col-sm-10" }, [
               _c("input", {
                 staticClass: "custom-file-input",
-                class: _vm.getError("logo") ? "is-invalid" : "",
+                class:
+                  _vm.getError("mimeType") ||
+                  _vm.getError("ext") ||
+                  _vm.getError("size")
+                    ? "is-invalid"
+                    : "",
                 attrs: {
                   type: "file",
                   id: "inputLogo",
@@ -41462,14 +41496,30 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _vm.getError("logo")
+              _vm.getError("mimeType") ||
+              _vm.getError("ext") ||
+              _vm.getError("size")
                 ? _c(
                     "span",
                     {
                       staticClass: "invalid-feedback",
                       attrs: { role: "alert" }
                     },
-                    [_c("strong", [_vm._v(_vm._s(_vm.getError("logo")))])]
+                    [
+                      _vm.getError("mimeType")
+                        ? _c("strong", [
+                            _vm._v(_vm._s(_vm.getError("mimeType")))
+                          ])
+                        : _vm._e(),
+                      _vm._v("  \n                        "),
+                      _vm.getError("ext")
+                        ? _c("strong", [_vm._v(_vm._s(_vm.getError("ext")))])
+                        : _vm._e(),
+                      _vm._v("  \n                        "),
+                      _vm.getError("size")
+                        ? _c("strong", [_vm._v(_vm._s(_vm.getError("size")))])
+                        : _vm._e()
+                    ]
                   )
                 : _vm._e()
             ])
@@ -57728,10 +57778,10 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************************!*\
   !*** ./resources/lang/ru.json ***!
   \********************************/
-/*! exports provided: Add, Add department, Add user, Choose logo, Delete, Departments, Department description, Department name, Description, Enter e-mail, Enter name, Enter password, E-Mail, E-Mail Address, Forgot Your Password?, Login, Logo, Logout, Name, Password, Remember Me, Reset Password, Save, Send Password Reset Link, Update, Update department, Update user, Users, default */
+/*! exports provided: Add, Add department, Add user, Choose logo, Delete, Departments, Department description, Department name, Description, Enter e-mail, Enter name, Enter password, E-Mail, E-Mail Address, Forgot Your Password?, Login, Logo, Logout, Name, Password, Remember Me, Reset Password, Save, Send Password Reset Link, Sure?, Update, Update department, Update user, Users, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"Add\":\"Добавить\",\"Add department\":\"Добавление отдела\",\"Add user\":\"Добавление пользователя\",\"Choose logo\":\"Выбрать файл для логотипа\",\"Delete\":\"Удалить\",\"Departments\":\"Отделы\",\"Department description\":\"Описание отдела\",\"Department name\":\"Наименование отдела\",\"Description\":\"Описание\",\"Enter e-mail\":\"E-mail пользователя\",\"Enter name\":\"Имя пользователя\",\"Enter password\":\"Пароль для пользователя\",\"E-Mail\":\"E-mail\",\"E-Mail Address\":\"Ваш e-mail\",\"Forgot Your Password?\":\"Забыли пароль?\",\"Login\":\"Авторизация\",\"Logo\":\"Логотип\",\"Logout\":\"Выход\",\"Name\":\"Имя\",\"Password\":\"Пароль\",\"Remember Me\":\"Запомнить меня\",\"Reset Password\":\"Восстановление пароля\",\"Save\":\"Сохранить\",\"Send Password Reset Link\":\"Получить ссылку для восстановления пароля\",\"Update\":\"Редактировать\",\"Update department\":\"Редактирование отдела\",\"Update user\":\"Редактирование пользователя\",\"Users\":\"Пользователи\"}");
+module.exports = JSON.parse("{\"Add\":\"Добавить\",\"Add department\":\"Добавление отдела\",\"Add user\":\"Добавление пользователя\",\"Choose logo\":\"Выбрать файл для логотипа\",\"Delete\":\"Удалить\",\"Departments\":\"Отделы\",\"Department description\":\"Описание отдела\",\"Department name\":\"Наименование отдела\",\"Description\":\"Описание\",\"Enter e-mail\":\"E-mail пользователя\",\"Enter name\":\"Имя пользователя\",\"Enter password\":\"Пароль для пользователя\",\"E-Mail\":\"E-mail\",\"E-Mail Address\":\"Ваш e-mail\",\"Forgot Your Password?\":\"Забыли пароль?\",\"Login\":\"Авторизация\",\"Logo\":\"Логотип\",\"Logout\":\"Выход\",\"Name\":\"Имя\",\"Password\":\"Пароль\",\"Remember Me\":\"Запомнить меня\",\"Reset Password\":\"Восстановление пароля\",\"Save\":\"Сохранить\",\"Send Password Reset Link\":\"Получить ссылку для восстановления пароля\",\"Sure?\":\"Подтверждаете ?\",\"Update\":\"Редактировать\",\"Update department\":\"Редактирование отдела\",\"Update user\":\"Редактирование пользователя\",\"Users\":\"Пользователи\"}");
 
 /***/ }),
 

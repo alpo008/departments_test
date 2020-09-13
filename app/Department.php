@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 /**
  * Class Department
@@ -56,7 +57,20 @@ class Department extends Model
         return [
             'name' => 'required|between:2,127|regex:/^[абвгдеёжзийклмнопрстуфхцчшщъыьэюяяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯЯА-Яa-zA-Z\s\d_-]+$/' . $nameUnique,
             'description' => 'required|between:5,65535',
-            'logo' => 'nullable|file|mimes:jpeg,gif,png|max:1024'
+        ];
+    }
+
+    /**
+     * Validation rules for Department instances
+     *
+     * @return array
+     */
+    public static function fileRules() :array
+    {
+        return [
+            'mimeType' => ['nullable', Rule::in(['image/jpeg', 'image/png', 'image/gif'])],
+            'ext' => ['nullable', Rule::in(['jpeg', 'jpg', 'png', 'gif', 'JPEG', 'JPG', 'PNG', 'GIF'])],
+            'size' => 'nullable|integer|max:1024'
         ];
     }
 }
