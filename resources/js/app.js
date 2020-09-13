@@ -19,7 +19,7 @@ Vue.component('users-component', require('./components/UsersComponent').default)
 Vue.component('departments-form-component', require('./components/DepartmentsFormComponent').default);
 
 const app = new Vue({
-    el: '#app',
+    el: '#vue_app',
     router,
     i18n,
     data: {

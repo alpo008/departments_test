@@ -69,7 +69,7 @@ $vueComponents = ['departments', 'users', 'add-department', 'edit-department', '
             </div>
         @else
             <div class="col-md-10">
-                <div id="app">
+                <div id="vue_app">
                     <app-component></app-component>
                 </div>
             </div>
