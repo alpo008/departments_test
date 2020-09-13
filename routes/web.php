@@ -31,6 +31,13 @@ Route::resource('user', 'UserController')->except([
     'create', 'edit'
 ]);
 
+Route::get('locale/{locale}', function ($locale) {
+    session(['locale' => $locale]);
+    return redirect()->back();
+})->name('locale');
+
+// Routes for case when user tries to reload reactive VueJs page
+//
 Route::get('/add-user', 'HomeController@addUser');
 Route::get('/edit-user/{id}', 'HomeController@editUser');
 Route::get('/add-department', 'HomeController@addDepartment');

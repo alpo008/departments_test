@@ -43,6 +43,13 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
+                        @php($locale = \Illuminate\Support\Facades\App::getLocale())
+                        <li class="nav-item localization {{ $locale === 'en' ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('locale', ['locale' => 'en']) }}">EN</a>
+                        </li>
+                        <li class="nav-item localization {{ $locale === 'ru' ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('locale', ['locale' => 'ru']) }}">RU</a>
+                        </li>
                         <!-- Authentication Links -->
                         @auth
                             <li class="nav-item dropdown">

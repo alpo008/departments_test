@@ -12,7 +12,7 @@
                     <tr v-for="department in departments">
                         <td>
                             <img
-                                width="60"
+                                width="80"
                                 :src="imagePath(department.logo)"
                                 :alt="department.name"
                                 :title="department.name"

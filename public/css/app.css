@@ -10899,3 +10899,13 @@ a.text-dark:focus {
   }
 }
 
+.nav-item.localization.active a {
+  pointer-events: none;
+}
+
+td > img {
+  padding: 2px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}
+

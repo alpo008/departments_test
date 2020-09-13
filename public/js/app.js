@@ -41165,7 +41165,7 @@ var render = function() {
                   _c("td", [
                     _c("img", {
                       attrs: {
-                        width: "60",
+                        width: "80",
                         src: _vm.imagePath(department.logo),
                         alt: department.name,
                         title: department.name
